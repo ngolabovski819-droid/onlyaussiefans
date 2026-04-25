@@ -2,6 +2,8 @@ export interface CategoryConfig {
   slug: string;
   label: string;
   terms: string[];
+  /** If set, filter by subscription price in addition to (or instead of) terms */
+  priceFilter?: 'free' | 'under5' | 'under10';
   emoji?: string;
   popular?: boolean;
 }
@@ -16,7 +18,7 @@ export const categories: CategoryConfig[] = [
   { slug: 'blonde', label: 'Blonde', terms: ['blonde', 'blond'], popular: true },
   { slug: 'trans', label: 'Trans', terms: ['trans', 'transgender', 'transwoman', 'tgirl'], popular: true },
   { slug: 'lesbian', label: 'Lesbian', terms: ['lesbian', 'sapphic', 'wlw'], popular: true },
-  { slug: 'free', label: 'Free', terms: ['free'], emoji: '🆓', popular: true },
+  { slug: 'free', label: 'Free', terms: [], priceFilter: 'free', emoji: '🆓', popular: true },
   { slug: 'fitness', label: 'Fitness', terms: ['fitness', 'gym', 'workout', 'athletes', 'sport'], popular: true },
   { slug: 'petite', label: 'Petite', terms: ['petite', 'small', 'tiny'], popular: true },
   { slug: 'busty', label: 'Busty', terms: ['busty', 'big boobs', 'big tits', 'large breasts', 'huge boobs'] },
@@ -43,7 +45,7 @@ export const categories: CategoryConfig[] = [
   { slug: 'asmr', label: 'ASMR', terms: ['asmr', 'whisper', 'tingles'] },
   { slug: 'natural', label: 'Natural', terms: ['natural', 'all natural', 'au naturel', 'no surgery'] },
   { slug: 'indian', label: 'Indian', terms: ['indian', 'desi', 'south asian', 'hindi'] },
-  { slug: 'milf-free', label: 'Free MILF', terms: ['milf', 'cougar', 'mature mom'] },
+  { slug: 'milf-free', label: 'Free MILF', terms: ['milf', 'cougar', 'mature mom'], priceFilter: 'free' },
 ];
 
 export const popularCategories = categories.filter((c) => c.popular);

@@ -15,6 +15,8 @@ interface Props {
   price?: string;
   sort?: string;
   q?: string;
+  /** When true, load-more skips the AU location filter (used for category pages) */
+  skipLocationFilter?: boolean;
 }
 
 const PAGE_SIZE = 20;
@@ -30,6 +32,7 @@ export default function CreatorGrid({
   price,
   sort,
   q,
+  skipLocationFilter,
 }: Props) {
   const [creators, setCreators] = useState<Creator[]>(initialCreators);
   const [page, setPage] = useState(1);
@@ -53,6 +56,8 @@ export default function CreatorGrid({
       if (filterGroups && Object.keys(filterGroups).length) {
         params.set('filter_groups', JSON.stringify(filterGroups));
       }
+      // Skip AU location filter when on a category page (matches SSR behaviour)
+      if (skipLocationFilter) params.set('skip_location_filter', 'true');
 
       const res = await fetch(`/api/search?${params.toString()}`);
       if (!res.ok) throw new Error('Fetch failed');

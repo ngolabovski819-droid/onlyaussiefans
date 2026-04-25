@@ -54,6 +54,13 @@ export async function GET(req: NextRequest) {
     ? categoryTermsRaw.split(',').map((t) => t.trim()).filter(Boolean)
     : undefined;
 
+  // Skip the AU location filter when:
+  //   (a) caller explicitly sets skip_location_filter=true, OR
+  //   (b) category terms are present with no location terms (category pages search globally)
+  const skipLocationFilter =
+    searchParams.get('skip_location_filter') === 'true' ||
+    (!!categoryTerms?.length && !locationTerms?.length);
+
   // Filter groups: filter_groups={"appearance":["slim","curvy"],"ethnicity":["asian"]}
   let filterGroups: Record<string, string[]> | undefined;
   const filterGroupsRaw = searchParams.get('filter_groups');
@@ -79,6 +86,7 @@ export async function GET(req: NextRequest) {
       locationTerms,
       categoryTerms,
       filterGroups,
+      skipLocationFilter,
     });
 
     return NextResponse.json(result, {

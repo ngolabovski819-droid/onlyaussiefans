@@ -40,11 +40,11 @@ export default async function CategoryPage({ params }: Props) {
   if (!cat) notFound();
 
   const { creators, total, hasMore } = await fetchCreators({
-    categoryTerms: cat.terms,
+    categoryTerms: cat.terms.length > 0 ? cat.terms : undefined,
+    price: cat.priceFilter,
     skipLocationFilter: true,
     pageSize: 24,
     sort: 'popular',
-    revalidate: 3600,
   });
 
   const faqSchema = {
@@ -110,7 +110,9 @@ export default async function CategoryPage({ params }: Props) {
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}
-          categoryTerms={cat.terms}
+          categoryTerms={cat.terms.length > 0 ? cat.terms : undefined}
+          price={cat.priceFilter}
+          skipLocationFilter
         />
 
         {/* Internal linking: state × category */}
