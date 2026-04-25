@@ -11,7 +11,7 @@ export interface CategoryConfig {
 export const categories: CategoryConfig[] = [
   { slug: 'milf', label: 'MILF', terms: ['milf', 'mom', 'cougar', 'mature mom'], emoji: '🔥', popular: true },
   { slug: 'bbw', label: 'BBW', terms: ['bbw', 'plus size', 'curvy', 'thick', 'chubby'], emoji: '💕', popular: true },
-  { slug: 'teen', label: 'Teen (18+)', terms: ['teen', '18', 'young', 'student', 'college'], popular: true },
+  { slug: 'teen', label: 'Teen (18+)', terms: ['teen', 'young', 'student', 'college', 'uni'], popular: true },
   { slug: 'latina', label: 'Latina', terms: ['latina', 'latinas', 'hispanic', 'mexican'], popular: true },
   { slug: 'asian', label: 'Asian', terms: ['asian', 'japanese', 'korean', 'chinese', 'filipina', 'thai'], popular: true },
   { slug: 'ebony', label: 'Ebony', terms: ['ebony', 'black', 'african'], popular: true },
@@ -24,7 +24,7 @@ export const categories: CategoryConfig[] = [
   { slug: 'busty', label: 'Busty', terms: ['busty', 'big boobs', 'big tits', 'large breasts', 'huge boobs'] },
   { slug: 'redhead', label: 'Redhead', terms: ['redhead', 'ginger', 'red hair'] },
   { slug: 'brunette', label: 'Brunette', terms: ['brunette', 'brown hair', 'dark hair'] },
-  { slug: 'mature', label: 'Mature', terms: ['mature', 'milf', 'cougar', '40', '50'] },
+  { slug: 'mature', label: 'Mature', terms: ['mature', 'milf', 'cougar', 'mommy', 'experienced'] },
   { slug: 'goth', label: 'Goth / Alt', terms: ['goth', 'gothic', 'alt', 'alternative', 'emo', 'punk'], emoji: '🖤' },
   { slug: 'cosplay', label: 'Cosplay', terms: ['cosplay', 'costume', 'anime', 'nerd', 'geek'] },
   { slug: 'feet', label: 'Feet', terms: ['feet', 'foot', 'toes', 'soles'] },
