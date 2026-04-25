@@ -14,6 +14,8 @@ export interface SearchParams {
   categoryTerms?: string[];
   /** Per-filter-group terms: { groupId: selectedTerms[] }. Each group is ANDed; within a group terms are ORed. */
   filterGroups?: Record<string, string[]>;
+  /** Skip the AU location filter entirely (e.g. category pages that search globally) */
+  skipLocationFilter?: boolean;
   /** Revalidate tag for Next.js fetch caching */
   revalidate?: number;
 }
@@ -92,7 +94,7 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
       `about.ilike.*${t}*`,
     ]);
     andClauses.push(`(${parts.join(',')})`);
-  } else {
+  } else if (!params.skipLocationFilter) {
     andClauses.push(buildAuOrExpression());
   }
 

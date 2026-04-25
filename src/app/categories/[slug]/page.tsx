@@ -41,6 +41,7 @@ export default async function CategoryPage({ params }: Props) {
 
   const { creators, total, hasMore } = await fetchCreators({
     categoryTerms: cat.terms,
+    skipLocationFilter: true,
     pageSize: 24,
     sort: 'popular',
     revalidate: 3600,
