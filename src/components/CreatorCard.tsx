@@ -20,7 +20,7 @@ function getBestBundle(creator: Creator): string | null {
 }
 
 export default function CreatorCard({ creator, index }: Props) {
-  const { src, srcSet, sizes } = buildSrcset(creator.avatarC144 ?? creator.avatar);
+  const { src, srcSet, sizes } = buildSrcset(creator.avatar ?? creator.avatarC144);
   const isEager = index < 4;
   const bundle = getBestBundle(creator);
   const price = formatPrice(creator.subscribePrice);

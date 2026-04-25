@@ -16,12 +16,12 @@ export function buildSrcset(url: string | null | undefined): SrcsetData {
   if (!url) {
     return { src: '/no-image.png', srcSet: '', sizes: '' };
   }
-  const widths = [144, 240, 320, 480, 720];
+  const widths = [240, 360, 480, 720];
   const srcSet = widths
     .map((w) => `${proxyImg(url, w, Math.round((w * 4) / 3))} ${w}w`)
     .join(', ');
-  const src = proxyImg(url, 320, 427);
+  const src = proxyImg(url, 480, 640);
   const sizes =
-    '(max-width:480px) 144px, (max-width:768px) 240px, (max-width:1200px) 320px, 360px';
+    '(max-width:480px) calc(50vw - 16px), (max-width:768px) 240px, (max-width:1200px) 320px, 360px';
   return { src, srcSet, sizes };
 }
