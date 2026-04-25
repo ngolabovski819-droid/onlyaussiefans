@@ -76,9 +76,11 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
   const pageSize = params.pageSize ?? 20;
   const offset = (page - 1) * pageSize;
 
-  const url = new URL(`${supabaseUrl}/rest/v1/onlyfans_profiles`);
-  url.searchParams.set('select', CARD_COLS);
-  url.searchParams.set('isperformer', 'eq.true');
+  // Use a plain params object — we'll build the final URL manually so PostgREST
+  // filter expressions (or/and) are NOT percent-encoded (PostgREST requires raw parens/commas)
+  const qp = new URLSearchParams();
+  qp.set('select', CARD_COLS);
+  qp.set('isperformer', 'eq.true');
 
   // Build AND clauses — each is a parenthesized OR expression
   const andClauses: string[] = [];
@@ -94,7 +96,7 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
     andClauses.push(buildAuOrExpression());
   }
 
-  // 2. Text query — across username, name, about only (never raw location)
+  // 2. Text query — across username, name, about only
   if (params.q && params.q.trim()) {
     const terms = params.q.split(/[|,]/).map((t) => t.trim()).filter(Boolean);
     const cols = ['username', 'name', 'about'];
@@ -109,7 +111,7 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
     andClauses.push(`(${exprs.join(',')})`);
   }
 
-  // 4. Filter groups — each group is its own AND clause (within group = OR)
+  // 4. Filter groups
   if (params.filterGroups) {
     for (const terms of Object.values(params.filterGroups)) {
       if (terms.length > 0) {
@@ -119,41 +121,45 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
     }
   }
 
-  // Apply compound filter — PostgREST or/and require parenthesised values
+  // Build raw filter string — must NOT be percent-encoded
+  let rawFilter = '';
   if (andClauses.length === 1) {
-    url.searchParams.set('or', andClauses[0]); // keep parens: (cond1,cond2,...)
+    rawFilter = `&or=${andClauses[0]}`;
   } else if (andClauses.length > 1) {
     const parts = andClauses.map((c) => `or${c}`);
-    url.searchParams.set('and', `(${parts.join(',')})`);
+    rawFilter = `&and=(${parts.join(',')})`;
   }
 
   // Verified filter
   if (params.verified) {
-    url.searchParams.set('isverified', 'eq.true');
+    qp.set('isverified', 'eq.true');
   }
 
   // Price filter
   if (params.price === 'free') {
-    url.searchParams.set('subscribeprice', 'eq.0');
+    qp.set('subscribeprice', 'eq.0');
   } else if (params.price === 'under5') {
-    url.searchParams.set('subscribeprice', 'lte.5');
+    qp.set('subscribeprice', 'lte.5');
   } else if (params.price === 'under10') {
-    url.searchParams.set('subscribeprice', 'lte.10');
+    qp.set('subscribeprice', 'lte.10');
   }
 
   // Sort
   if (params.sort === 'newest') {
-    url.searchParams.set('order', 'first_seen_at.desc.nullslast,favoritedcount.desc');
+    qp.set('order', 'first_seen_at.desc.nullslast,favoritedcount.desc');
   } else {
-    url.searchParams.set('order', 'favoritedcount.desc,subscribeprice.asc.nullslast');
+    qp.set('order', 'favoritedcount.desc,subscribeprice.asc.nullslast');
   }
 
-  url.searchParams.set('limit', String(pageSize));
-  url.searchParams.set('offset', String(offset));
+  qp.set('limit', String(pageSize));
+  qp.set('offset', String(offset));
+
+  // Final URL: standard params (safely encoded) + raw filter appended manually
+  const finalUrl = `${supabaseUrl}/rest/v1/onlyfans_profiles?${qp.toString()}${rawFilter}`;
 
   let res: Response;
   try {
-    res = await fetch(url.toString(), {
+    res = await fetch(finalUrl, {
       headers: {
         apikey: supabaseKey,
         Authorization: `Bearer ${supabaseKey}`,
