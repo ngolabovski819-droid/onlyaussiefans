@@ -32,14 +32,13 @@ export const AU_TERMS_BIO: string[] = [
 ];
 
 /**
- * Returns a PostgREST OR expression that matches Australian creators by
- * checking `location` (all terms incl. abbreviations) OR `about` (bio-safe
- * terms only, no short codes that cause false positives).
+ * Returns a PostgREST OR expression covering all AU location terms.
+ * Searches `location` column only — `about` wildcard scans across 100k rows
+ * are too slow and cause Supabase 500 timeouts.
  */
 export function buildAuOrExpression(): string {
-  const locationParts = AU_TERMS_LOCATION.map((t) => `location.ilike.*${t}*`);
-  const bioParts = AU_TERMS_BIO.map((t) => `about.ilike.*${t}*`);
-  return `(${[...locationParts, ...bioParts].join(',')})`;
+  const parts = AU_TERMS_LOCATION.map((t) => `location.ilike.*${t}*`);
+  return `(${parts.join(',')})`;
 }
 
 /** @deprecated kept for reference — use AU_TERMS_LOCATION / AU_TERMS_BIO directly */
