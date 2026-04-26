@@ -31,7 +31,7 @@ export async function GET(_req: Request, { params }: Params) {
   if (id === '0') {
     const staticUrls = [
       url('/', 1.0, 'daily'),
-      url('/onlyfans-search/', 0.9, 'daily'),
+      url('/search/', 0.9, 'daily'),
       url('/blog/', 0.8, 'weekly'),
       url('/about/', 0.5, 'monthly'),
       url('/privacy/', 0.3, 'monthly'),

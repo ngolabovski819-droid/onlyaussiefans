@@ -89,7 +89,7 @@ export default async function CategoryPage({ params }: Props) {
         <nav className="breadcrumb" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span className="breadcrumb-sep">›</span>
-          <Link href="/onlyfans-search">Categories</Link>
+          <Link href="/search">Categories</Link>
           <span className="breadcrumb-sep">›</span>
           <span className="breadcrumb-current">{cat.label}</span>
         </nav>

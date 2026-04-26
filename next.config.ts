@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/onlyfans-search',
+        destination: '/search',
+        permanent: true,
+      },
+      {
+        source: '/onlyfans-search/:path*',
+        destination: '/search',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.weserv.nl" },

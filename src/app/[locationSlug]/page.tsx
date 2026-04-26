@@ -119,7 +119,7 @@ export default async function LocationPage({ params }: Props) {
           )}
           {isState && (
             <>
-              <Link href="/onlyfans-search">Australia</Link>
+              <Link href="/search">Australia</Link>
               <span className="breadcrumb-sep">›</span>
             </>
           )}

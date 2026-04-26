@@ -38,9 +38,9 @@ async function TrendingCreators() {
 }
 
 const QUICK_TABS = [
-  { label: 'All Creators', href: '/onlyfans-search' },
+  { label: 'All Creators', href: '/search' },
   { label: 'Free OnlyFans', href: '/categories/free' },
-  { label: 'Verified Only', href: '/onlyfans-search?verified=true' },
+  { label: 'Verified Only', href: '/search?verified=true' },
   { label: 'New to OnlyFans', href: '/categories/new' },
 ];
 

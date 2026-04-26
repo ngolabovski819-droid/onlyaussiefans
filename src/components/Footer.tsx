@@ -60,7 +60,6 @@ export default function Footer() {
               <li><Link href="/about" className="footer-link">About Us</Link></li>
               <li><Link href="/blog" className="footer-link">Blog</Link></li>
               <li><Link href="/search" className="footer-link">Search Creators</Link></li>
-              <li><Link href="/onlyfans-search" className="footer-link">OnlyFans Search</Link></li>
             </ul>
             <h3 className="footer-heading" style={{ marginTop: '1rem' }}>Legal</h3>
             <ul className="footer-list">
