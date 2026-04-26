@@ -27,12 +27,13 @@ export const metadata: Metadata = {
 };
 
 async function TrendingCreators() {
-  const { creators, total, hasMore } = await fetchCreators({ pageSize: 20, sort: 'popular', revalidate: 300 });
+  const { creators, total, hasMore } = await fetchCreators({ pageSize: 20, sort: 'popular', revalidate: 300, skipLocationFilter: true });
   return (
     <CreatorGrid
       initialCreators={creators}
       initialTotal={total}
       initialHasMore={hasMore}
+      skipLocationFilter={true}
       />
   );
 }

@@ -31,6 +31,7 @@ export default async function SearchPage({ searchParams }: Props) {
     price: price !== 'any' ? price : undefined,
     sort,
     pageSize: 24,
+    skipLocationFilter: true,
     revalidate: 0,
   });
 
@@ -61,6 +62,7 @@ export default async function SearchPage({ searchParams }: Props) {
           verified={verified || undefined}
           price={price !== 'any' ? price : undefined}
           sort={sort}
+          skipLocationFilter={true}
         />
       </div>
     </div>

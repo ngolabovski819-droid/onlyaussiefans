@@ -87,15 +87,13 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
   // Build AND clauses — each is a parenthesized OR expression
   const andClauses: string[] = [];
 
-  // 1. Location scope — state/city terms override broad AU filter
+  // 1. Location scope — state/city terms, location column only
+  // NOTE: about.ilike.* removed — wildcard scan on 100k rows causes Supabase timeouts
+  // NOTE: buildAuOrExpression() fallback removed — 37-term OR takes ~8-9s and caused
+  //       Vercel SSG build timeouts, pre-rendering all pages with 0 creators.
   if (params.locationTerms && params.locationTerms.length > 0) {
-    const parts = params.locationTerms.flatMap((t) => [
-      `location.ilike.*${t}*`,
-      `about.ilike.*${t}*`,
-    ]);
+    const parts = params.locationTerms.map((t) => `location.ilike.*${t}*`);
     andClauses.push(`(${parts.join(',')})`);
-  } else if (!params.skipLocationFilter) {
-    andClauses.push(buildAuOrExpression());
   }
 
   // 2. Text query — across username, name, about only
