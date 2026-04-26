@@ -26,14 +26,25 @@ export const metadata: Metadata = {
   },
 };
 
+// Safe AU location terms — no ambiguous abbreviations that match US/intl locations.
+// 'australia' covers ~726 creators (dominant). Other city/state names add specificity.
+// Deliberately excluded: 'victoria' (matches Victoria BC, Canada),
+//   'newcastle' (matches Newcastle Upon Tyne, UK).
+const AU_TERMS = [
+  'australia', 'australian', 'aussie',
+  'sydney', 'melbourne', 'brisbane', 'perth', 'adelaide', 'canberra', 'darwin', 'hobart',
+  'gold coast', 'sunshine coast', 'wollongong', 'geelong', 'cairns', 'townsville',
+  'new south wales', 'queensland', 'western australia', 'south australia', 'northern territory', 'tasmania',
+];
+
 async function TrendingCreators() {
-  const { creators, total, hasMore } = await fetchCreators({ pageSize: 20, sort: 'popular', revalidate: 300, skipLocationFilter: true });
+  const { creators, total, hasMore } = await fetchCreators({ pageSize: 20, sort: 'popular', revalidate: 300, locationTerms: AU_TERMS });
   return (
     <CreatorGrid
       initialCreators={creators}
       initialTotal={total}
       initialHasMore={hasMore}
-      skipLocationFilter={true}
+      locationTerms={AU_TERMS}
       />
   );
 }
