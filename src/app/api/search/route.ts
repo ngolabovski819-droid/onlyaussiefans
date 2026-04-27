@@ -89,9 +89,11 @@ export async function GET(req: NextRequest) {
       skipLocationFilter,
     });
 
+    // Cache Load More responses for 30s (public, non-personalised search).
+    // stale-while-revalidate lets the CDN serve stale data while refreshing.
     return NextResponse.json(result, {
       headers: {
-        'Cache-Control': 'no-store',
+        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
       },
     });
   } catch (err) {

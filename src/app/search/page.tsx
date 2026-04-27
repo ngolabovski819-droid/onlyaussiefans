@@ -32,7 +32,7 @@ export default async function SearchPage({ searchParams }: Props) {
     sort,
     pageSize: 24,
     skipLocationFilter: true,
-    revalidate: 0,
+    revalidate: 30,
   });
 
   return (

@@ -164,7 +164,9 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
         apikey: supabaseKey,
         Authorization: `Bearer ${supabaseKey}`,
         'Accept-Profile': 'public',
-        Prefer: 'count=exact',
+        // count=estimated uses PostgreSQL query-planner stats (~instant).
+        // count=exact forces a full COUNT(*) scan (4+ seconds on 70k rows).
+        Prefer: 'count=estimated',
       },
       next: { revalidate: params.revalidate ?? 300 },
     });
