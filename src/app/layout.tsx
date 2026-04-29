@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Syne } from 'next/font/google';
-import Script from 'next/script';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
@@ -84,14 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main>{children}</main>
         <Footer />
-        {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
-        </Script>
+        <GoogleAnalytics gaId={GA_ID} />
       </body>
     </html>
   );
