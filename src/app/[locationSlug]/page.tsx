@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getStateByUrlSlug, states } from '@/config/states';
-import { getCityByUrlSlug, getCitiesByState, cities } from '@/config/cities';
+import { getCityByUrlSlug, getCitiesByState } from '@/config/cities';
 import { popularCategories } from '@/config/categories';
-import { fetchCreators } from '@/lib/supabase';
+import { fetchSponsoredPage, locationScope } from '@/config/featured';
 import CreatorGrid from '@/components/CreatorGrid';
 import RelatedLocations from '@/components/RelatedLocations';
 
@@ -14,13 +14,6 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 
 interface Props {
   params: Promise<{ locationSlug: string }>;
-}
-
-export async function generateStaticParams() {
-  return [
-    ...states.map(s => ({ locationSlug: s.urlSlug })),
-    ...cities.map(c => ({ locationSlug: c.urlSlug })),
-  ];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -52,13 +45,18 @@ export default async function LocationPage({ params }: Props) {
 
   const loc = (state ?? city)!;
   const isState = !!state;
+  const scope = locationScope(locationSlug);
 
-  const { creators, total, hasMore } = await fetchCreators({
-    locationTerms: loc.terms,
-    pageSize: 24,
-    sort: 'popular',
-    revalidate: 3600,
-  });
+  const { creators, total, hasMore } = await fetchSponsoredPage(
+    scope,
+    {
+      locationTerms: loc.terms,
+      sort: 'popular',
+      revalidate: 3600,
+    },
+    1,
+    24,
+  );
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -82,12 +80,12 @@ export default async function LocationPage({ params }: Props) {
     ],
   };
 
-  const itemListSchema = creators.length > 0 ? {
+  const organicCreators = creators.filter((creator) => !creator.sponsored);
+  const itemListSchema = organicCreators.length > 0 ? {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `${loc.h1} — Top Creators`,
-    numberOfItems: total,
-    itemListElement: creators.slice(0, 10).map((c, i) => ({
+    itemListElement: organicCreators.slice(0, 10).map((c, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       url: `https://onlyfans.com/${c.username}`,
@@ -129,7 +127,7 @@ export default async function LocationPage({ params }: Props) {
         <div className="location-page-header">
           <h1>{loc.h1}</h1>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            {total.toLocaleString()} creators found in {loc.label}
+            Australian creators found in {loc.label}
           </p>
           <p className="location-intro">{loc.intro}</p>
         </div>
@@ -139,7 +137,9 @@ export default async function LocationPage({ params }: Props) {
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}
+          pageSize={24}
           locationTerms={loc.terms}
+          scope={scope}
         />
 
         {/* Browse by category */}

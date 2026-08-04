@@ -2,8 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { states } from '@/config/states';
 import { popularCategories } from '@/config/categories';
+import SearchHistoryDropdown from './SearchHistoryDropdown';
+import {
+  addSearchTerm,
+  clearSearchHistory,
+  getSearchHistory,
+  removeSearchTerm,
+} from '@/lib/searchHistory';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -11,9 +20,28 @@ const NAV_LINKS = [
 ];
 
 export default function Nav() {
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [statesOpen, setStatesOpen] = useState(false);
   const [catsOpen, setCatsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchHistory, setSearchHistory] = useState<string[]>(getSearchHistory);
+  const [activeSearch, setActiveSearch] = useState<'desktop' | 'mobile' | null>(null);
+
+  const runSearch = (term: string) => {
+    const clean = term.trim();
+    if (!clean) return;
+    setSearchHistory(addSearchTerm(clean));
+    setSearchQuery('');
+    setActiveSearch(null);
+    setMobileOpen(false);
+    router.push(`/search?q=${encodeURIComponent(clean)}`);
+  };
+
+  const submitSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    runSearch(searchQuery);
+  };
 
   return (
     <header className="nav-wrapper">
@@ -21,7 +49,29 @@ export default function Nav() {
       <div className="nav-row1">
         <Link href="/" className="nav-logo">
           OnlyAussieFans
+          <Image className="brand-flag" src="/favicon.svg" alt="" width={31} height={16} aria-hidden="true" />
         </Link>
+
+        <form className="nav-search" onSubmit={submitSearch}>
+          <span className="nav-search-icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            value={searchQuery}
+            placeholder="Search creators…"
+            aria-label="Search creators"
+            onChange={(event) => setSearchQuery(event.target.value)}
+            onFocus={() => setActiveSearch('desktop')}
+            onBlur={() => setActiveSearch(null)}
+          />
+          {activeSearch === 'desktop' && searchQuery.trim().length === 0 && (
+            <SearchHistoryDropdown
+              history={searchHistory}
+              onSelect={runSearch}
+              onRemove={(term) => setSearchHistory(removeSearchTerm(term))}
+              onClear={() => setSearchHistory(clearSearchHistory())}
+            />
+          )}
+        </form>
 
         {/* Desktop nav */}
         <nav className="nav-desktop">
@@ -106,6 +156,26 @@ export default function Nav() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="nav-mobile">
+          <form className="nav-mobile-search" onSubmit={submitSearch}>
+            <input
+              type="search"
+              value={searchQuery}
+              placeholder="Search creators…"
+              aria-label="Search creators"
+              onChange={(event) => setSearchQuery(event.target.value)}
+              onFocus={() => setActiveSearch('mobile')}
+              onBlur={() => setActiveSearch(null)}
+            />
+            <button type="submit">Search</button>
+            {activeSearch === 'mobile' && searchQuery.trim().length === 0 && (
+              <SearchHistoryDropdown
+                history={searchHistory}
+                onSelect={runSearch}
+                onRemove={(term) => setSearchHistory(removeSearchTerm(term))}
+                onClear={() => setSearchHistory(clearSearchHistory())}
+              />
+            )}
+          </form>
           {NAV_LINKS.map((l) => (
             <Link key={l.href} href={l.href} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
               {l.label}

@@ -6,9 +6,11 @@ export interface Creator {
   location: string | null;
   avatar: string | null;
   avatarC144: string | null;
+  header: string | null;
   isVerified: boolean;
   subscribePrice: number | null;
   favoritedCount: number;
+  firstSeenAt: string | null;
   subscribersCount: number | null;
   postsCount: number | null;
   photosCount: number | null;
@@ -24,4 +26,6 @@ export interface Creator {
   bundle3Discount: number | null;
   promotion1Price: number | null;
   promotion1Discount: number | null;
+  /** True when this row occupies a paid placement. */
+  sponsored?: boolean;
 }

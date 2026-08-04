@@ -1,6 +1,6 @@
 const WESERV = 'https://images.weserv.nl/';
 
-function proxyImg(url: string, w: number, h: number): string {
+export function proxyImg(url: string, w: number, h: number): string {
   if (!url || url.startsWith('/')) return url;
   const noScheme = url.replace(/^https?:\/\//, '');
   return `${WESERV}?url=${encodeURIComponent(noScheme)}&w=${w}&h=${h}&fit=cover&output=webp`;

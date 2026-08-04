@@ -3,6 +3,7 @@ import { states } from './states';
 export interface FilterOption {
   label: string;
   terms: string[]; // mapped to about.ilike searches
+  href?: string;
 }
 
 export interface FilterGroup {
@@ -50,6 +51,7 @@ export const filterGroups: FilterGroup[] = [
     options: states.map((s) => ({
       label: `${s.abbr} – ${s.label}`,
       terms: s.terms,
+      href: `/${s.urlSlug}/`,
     })),
   },
   {

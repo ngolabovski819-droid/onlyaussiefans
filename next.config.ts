@@ -1,8 +1,14 @@
 import type { NextConfig } from "next";
+import { categories } from "./src/config/categories";
 
 const nextConfig: NextConfig = {
   async redirects() {
     return [
+      ...categories.map((category) => ({
+        source: `/${category.slug}`,
+        destination: `/categories/${category.slug}`,
+        permanent: true,
+      })),
       {
         source: '/onlyfans-search',
         destination: '/search',

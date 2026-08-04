@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getCategoryBySlug, categories } from '@/config/categories';
+import { getCategoryBySlug } from '@/config/categories';
 import { states } from '@/config/states';
-import { fetchCreators } from '@/lib/supabase';
+import { categoryScope, fetchSponsoredPage } from '@/config/featured';
 import CreatorGrid from '@/components/CreatorGrid';
 import RelatedLocations from '@/components/RelatedLocations';
 
@@ -13,10 +13,6 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 
 interface Props {
   params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams() {
-  return categories.map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -38,14 +34,19 @@ export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const cat = getCategoryBySlug(slug);
   if (!cat) notFound();
+  const scope = categoryScope(slug);
 
-  const { creators, total, hasMore } = await fetchCreators({
-    categoryTerms: cat.terms.length > 0 ? cat.terms : undefined,
-    price: cat.priceFilter,
-    skipLocationFilter: true,
-    pageSize: 24,
-    sort: 'popular',
-  });
+  const { creators, total, hasMore } = await fetchSponsoredPage(
+    scope,
+    {
+      locationTerms: ['australia'],
+      categoryTerms: cat.terms.length > 0 ? cat.terms : undefined,
+      price: cat.priceFilter,
+      sort: 'popular',
+    },
+    1,
+    24,
+  );
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -64,7 +65,7 @@ export default async function CategoryPage({ params }: Props) {
       {
         '@type': 'Question',
         name: `How many ${cat.label} OnlyFans creators are in Australia?`,
-        acceptedAnswer: { '@type': 'Answer', text: `Our directory currently lists ${total} Australian ${cat.label.toLowerCase()} OnlyFans creators and is updated regularly.` },
+        acceptedAnswer: { '@type': 'Answer', text: `Our Australian ${cat.label.toLowerCase()} creator directory is updated regularly as new profiles are discovered.` },
       },
     ],
   };
@@ -97,7 +98,7 @@ export default async function CategoryPage({ params }: Props) {
         <div className="location-page-header">
           <h1>{cat.emoji && `${cat.emoji} `}Best {cat.label} Australian OnlyFans Creators</h1>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            {total.toLocaleString()} verified Australian {cat.label.toLowerCase()} creators found
+            Verified Australian {cat.label.toLowerCase()} creators
           </p>
           <p className="location-intro">
             Discover the top Australian {cat.label} OnlyFans creators in our daily-updated directory.
@@ -110,9 +111,11 @@ export default async function CategoryPage({ params }: Props) {
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}
+          pageSize={24}
+          locationTerms={['australia']}
           categoryTerms={cat.terms.length > 0 ? cat.terms : undefined}
           price={cat.priceFilter}
-          skipLocationFilter
+          scope={scope}
         />
 
         {/* Internal linking: state × category */}
@@ -139,8 +142,7 @@ export default async function CategoryPage({ params }: Props) {
             <details className="faq-item">
               <summary className="faq-question">How many {cat.label} OnlyFans creators are in Australia?</summary>
               <dd className="faq-answer">
-                Our directory currently lists {total} Australian {cat.label.toLowerCase()} OnlyFans creators and is
-                updated regularly with new profiles.
+                Our Australian {cat.label.toLowerCase()} creator directory is updated regularly with new profiles.
               </dd>
             </details>
             <details className="faq-item">

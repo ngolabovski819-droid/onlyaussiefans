@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { fetchCreators } from '@/lib/supabase';
+import { fetchSponsoredPage } from '@/config/featured';
 import { states } from '@/config/states';
 import { popularCategories } from '@/config/categories';
 import CreatorGrid from '@/components/CreatorGrid';
@@ -23,7 +23,12 @@ export const metadata: Metadata = {
 };
 
 export default async function OnlyFansSearchPage() {
-  const { creators, total, hasMore } = await fetchCreators({ pageSize: 20, sort: 'popular', revalidate: 3600 });
+  const { creators, total, hasMore } = await fetchSponsoredPage(
+    'directory',
+    { sort: 'popular', revalidate: 3600 },
+    1,
+    20,
+  );
 
   return (
     <div className="page-container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
@@ -67,6 +72,7 @@ export default async function OnlyFansSearchPage() {
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}
+          scope="directory"
           />
       </section>
 

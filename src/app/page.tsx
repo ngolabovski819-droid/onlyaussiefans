@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { fetchCreators } from '@/lib/supabase';
+import { fetchSponsoredPage } from '@/config/featured';
 import { popularCategories } from '@/config/categories';
 import { states } from '@/config/states';
 import CreatorGrid from '@/components/CreatorGrid';
 import CreatorGridSkeleton from '@/components/CreatorGridSkeleton';
 import StatsBar from '@/components/StatsBar';
 import CategoryBrowse from '@/components/CategoryBrowse';
+import CreatorSearch from '@/components/CreatorSearch';
 import { Suspense } from 'react';
 
 export const revalidate = 300;
@@ -38,13 +39,19 @@ const AU_TERMS = [
 ];
 
 async function TrendingCreators() {
-  const { creators, total, hasMore } = await fetchCreators({ pageSize: 20, sort: 'popular', revalidate: 300, locationTerms: AU_TERMS });
+  const { creators, total, hasMore } = await fetchSponsoredPage(
+    'home',
+    { sort: 'popular', revalidate: 300, locationTerms: AU_TERMS },
+    1,
+    20,
+  );
   return (
     <CreatorGrid
       initialCreators={creators}
       initialTotal={total}
       initialHasMore={hasMore}
       locationTerms={AU_TERMS}
+      scope="home"
       />
   );
 }
@@ -53,7 +60,7 @@ const QUICK_TABS = [
   { label: 'All Creators', href: '/search' },
   { label: 'Free OnlyFans', href: '/categories/free' },
   { label: 'Verified Only', href: '/search?verified=true' },
-  { label: 'New to OnlyFans', href: '/categories/new' },
+  { label: 'New to OnlyFans', href: '/search?sort=newest' },
 ];
 
 const REVIEWS = [
@@ -79,18 +86,7 @@ export default async function HomePage() {
         </p>
 
         {/* Hero search */}
-        <form action="/search" method="GET">
-          <div className="hero-search">
-            <input
-              type="text"
-              name="q"
-              className="hero-search-input"
-              placeholder="Search by name, city or category…"
-              aria-label="Search creators"
-            />
-            <button type="submit" className="hero-search-btn">Search</button>
-          </div>
-        </form>
+        <CreatorSearch />
 
         {/* Quick tabs */}
         <div className="hero-quick-tabs">
@@ -176,7 +172,7 @@ export default async function HomePage() {
           {REVIEWS.map((r, i) => (
             <div key={i} className="review-card">
               <div className="review-stars">★★★★★</div>
-              <p className="review-text">"{r.text}"</p>
+              <p className="review-text">&ldquo;{r.text}&rdquo;</p>
               <p className="review-author">— {r.author}</p>
             </div>
           ))}

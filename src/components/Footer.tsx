@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { states } from '@/config/states';
 import { popularCategories } from '@/config/categories';
 
@@ -12,7 +13,10 @@ export default function Footer() {
         <div className="footer-grid">
           {/* Brand column */}
           <div className="footer-brand">
-            <Link href="/" className="footer-logo">OnlyAussieFans</Link>
+            <Link href="/" className="footer-logo">
+              OnlyAussieFans
+              <Image className="brand-flag" src="/favicon.svg" alt="" width={31} height={16} aria-hidden="true" />
+            </Link>
             <p className="footer-tagline">
               Australia&apos;s largest OnlyFans creator directory. Find free and premium Aussie creators updated daily.
             </p>
