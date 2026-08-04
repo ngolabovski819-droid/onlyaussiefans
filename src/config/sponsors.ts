@@ -60,7 +60,7 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
     scopes: ['sitewide'],
     searchDropdown: true,
     linkOverride: 'https://onlyfans.com/rocketreynaxo/c58',
-    clickTable: 'sponsor_clicks_oaf_rocketreynaxo',
+    clickTable: 'sponsor_clicks_oaussief_rocketreynaxo',
     imageOverride: '/uploads/sponsors/rocketreynaxo/rocket-01.jpg',
     tags: ['Asian MILF', 'Busty', 'Curvy'],
     galleryImages: [
@@ -81,7 +81,7 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
     scopes: ['sitewide'],
     searchDropdown: true,
     linkOverride: 'https://onlyfans.com/hannazuki/c1043',
-    clickTable: 'sponsor_clicks_oaf_hannazuki',
+    clickTable: 'sponsor_clicks_oaussief_hannazuki',
     imageOverride: '/uploads/sponsors/hannazuki/hanna-01.jpg',
     tags: ['asian', 'cosplay', 'egirl', 'GFE'],
     galleryImages: [
@@ -99,7 +99,7 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
     scopes: ['sitewide'],
     searchDropdown: true,
     linkOverride: 'https://onlyfans.com/emilylopz/c545',
-    clickTable: 'sponsor_clicks_oaf_emilylopz',
+    clickTable: 'sponsor_clicks_oaussief_emilylopz',
     tags: ['GFE', 'Feet fetish', 'Squirting'],
     additionalTagCount: 9,
     galleryImages: [
