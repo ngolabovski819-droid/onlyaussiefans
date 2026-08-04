@@ -15,8 +15,9 @@ import {
 } from '@/lib/searchHistory';
 
 const NAV_LINKS = [
-  { label: 'Home', href: '/' },
   { label: 'Search', href: '/search' },
+  { label: 'Best Aussie OnlyFans', href: '/categories/best-aussie-onlyfans/' },
+  { label: 'Free OnlyFans', href: '/categories/free/' },
 ];
 
 export default function Nav() {
@@ -26,15 +27,17 @@ export default function Nav() {
   const [catsOpen, setCatsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>(getSearchHistory);
-  const [activeSearch, setActiveSearch] = useState<'desktop' | 'mobile' | null>(null);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const runSearch = (term: string) => {
     const clean = term.trim();
     if (!clean) return;
     setSearchHistory(addSearchTerm(clean));
     setSearchQuery('');
-    setActiveSearch(null);
+    setSearchFocused(false);
     setMobileOpen(false);
+    setMobileSearchOpen(false);
     router.push(`/search?q=${encodeURIComponent(clean)}`);
   };
 
@@ -60,10 +63,10 @@ export default function Nav() {
             placeholder="Search creators…"
             aria-label="Search creators"
             onChange={(event) => setSearchQuery(event.target.value)}
-            onFocus={() => setActiveSearch('desktop')}
-            onBlur={() => setActiveSearch(null)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
           />
-          {activeSearch === 'desktop' && searchQuery.trim().length === 0 && (
+          {searchFocused && searchQuery.trim().length === 0 && (
             <SearchHistoryDropdown
               history={searchHistory}
               onSelect={runSearch}
@@ -91,7 +94,7 @@ export default function Nav() {
               States ▾
             </button>
             {statesOpen && (
-              <div className="nav-dropdown">
+              <div className="nav-dropdown nav-dropdown--right">
                 {states.map((s) => (
                   <Link key={s.slug} href={`/${s.urlSlug}/`} className="nav-dropdown-item">
                     <span className="nav-dropdown-abbr">{s.abbr}</span>
@@ -112,7 +115,7 @@ export default function Nav() {
               Categories ▾
             </button>
             {catsOpen && (
-              <div className="nav-dropdown nav-dropdown--wide">
+              <div className="nav-dropdown nav-dropdown--wide nav-dropdown--right">
                 {popularCategories.map((c) => (
                   <Link key={c.slug} href={`/categories/${c.slug}/`} className="nav-dropdown-item">
                     {c.emoji && <span>{c.emoji} </span>}
@@ -125,57 +128,66 @@ export default function Nav() {
               </div>
             )}
           </div>
-
-          <Link href="/blog" className="nav-link">Blog</Link>
         </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          className="nav-hamburger"
-          aria-label="Toggle menu"
-          onClick={() => setMobileOpen((v) => !v)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </div>
+        {/* Mobile actions: search toggle + hamburger, grouped together */}
+        <div className="nav-mobile-actions">
+          <button
+            type="button"
+            className="nav-search-toggle"
+            aria-label="Search creators"
+            aria-expanded={mobileSearchOpen}
+            onClick={() => setMobileSearchOpen((v) => !v)}
+          >
+            <span aria-hidden="true">⌕</span>
+          </button>
 
-      {/* Row 2 — sticky category chips */}
-      <div className="nav-chips-row">
-        <div className="nav-chips-scroll">
-          {popularCategories.map((c) => (
-            <Link key={c.slug} href={`/categories/${c.slug}/`} className="nav-chip">
-              {c.emoji && <span>{c.emoji}</span>}
-              {c.label}
-            </Link>
-          ))}
+          <button
+            className="nav-hamburger"
+            aria-label="Toggle menu"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="nav-mobile">
-          <form className="nav-mobile-search" onSubmit={submitSearch}>
+      {/* Expanded mobile search */}
+      {mobileSearchOpen && (
+        <div className="nav-search-expanded">
+          <form
+            className="nav-search-expanded-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              runSearch(searchQuery);
+            }}
+          >
+            <span className="nav-search-icon" aria-hidden="true">⌕</span>
             <input
               type="search"
               value={searchQuery}
               placeholder="Search creators…"
               aria-label="Search creators"
+              autoFocus
               onChange={(event) => setSearchQuery(event.target.value)}
-              onFocus={() => setActiveSearch('mobile')}
-              onBlur={() => setActiveSearch(null)}
             />
-            <button type="submit">Search</button>
-            {activeSearch === 'mobile' && searchQuery.trim().length === 0 && (
-              <SearchHistoryDropdown
-                history={searchHistory}
-                onSelect={runSearch}
-                onRemove={(term) => setSearchHistory(removeSearchTerm(term))}
-                onClear={() => setSearchHistory(clearSearchHistory())}
-              />
-            )}
           </form>
+          {searchQuery.trim().length === 0 && (
+            <SearchHistoryDropdown
+              history={searchHistory}
+              onSelect={runSearch}
+              onRemove={(term) => setSearchHistory(removeSearchTerm(term))}
+              onClear={() => setSearchHistory(clearSearchHistory())}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="nav-mobile">
           {NAV_LINKS.map((l) => (
             <Link key={l.href} href={l.href} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
               {l.label}
@@ -193,7 +205,6 @@ export default function Nav() {
               {c.emoji} {c.label}
             </Link>
           ))}
-          <Link href="/blog" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Blog</Link>
         </div>
       )}
     </header>

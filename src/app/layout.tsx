@@ -20,13 +20,14 @@ export const metadata: Metadata = {
     template: '%s | OnlyAussieFans',
   },
   description:
-    'Find the best Australian OnlyFans creators. Search by location, category, price and more. 500+ verified Aussie creators — updated daily.',
+    'Find the best Australian OnlyFans creators. Search by location, category, price and more. 20,000+ verified Aussie creators — updated daily.',
   metadataBase: new URL(SITE_URL),
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   openGraph: {
     siteName: SITE_NAME,
     locale: 'en_AU',
     type: 'website',
+    images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
   alternates: {
     canonical: SITE_URL,
@@ -59,7 +60,7 @@ const websiteSchema = {
       '@id': `${SITE_URL}/#organization`,
       url: SITE_URL,
       name: SITE_NAME,
-      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png`, width: 512, height: 512 },
     },
   ],
 };

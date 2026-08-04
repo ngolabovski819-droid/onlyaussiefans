@@ -100,6 +100,7 @@ export default async function LocationCategoryPage({ params }: Props) {
         </div>
 
         <CreatorGrid
+          key={`${locationSlug}/${categorySlug}`}
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}

@@ -23,7 +23,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: post.title,
     description: post.description,
     alternates: { canonical: `${SITE_URL}/blog/${slug}/` },
-    openGraph: { title: post.title, description: post.description, type: 'article' },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      publishedTime: post.date,
+      images: [{ url: post.image ?? `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
+    },
   };
 }
 
@@ -53,8 +59,17 @@ export default async function BlogPostPage({ params }: Props) {
     '@type': 'Article',
     headline: post.title,
     datePublished: post.date,
+    dateModified: post.date,
     description: post.description,
-    publisher: { '@type': 'Organization', name: 'OnlyAussieFans', url: SITE_URL },
+    image: [post.image ?? `${SITE_URL}/opengraph-image`],
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${slug}/` },
+    author: { '@type': 'Organization', name: 'OnlyAussieFans', url: SITE_URL },
+    publisher: {
+      '@type': 'Organization',
+      name: 'OnlyAussieFans',
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+    },
   };
 
   return (

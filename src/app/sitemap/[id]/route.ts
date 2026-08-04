@@ -6,8 +6,9 @@ import { getAllPosts } from '@/lib/blog';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com';
 
-function url(path: string, priority = 0.7, freq = 'weekly'): string {
-  return `<url><loc>${SITE_URL}${path}</loc><changefreq>${freq}</changefreq><priority>${priority}</priority></url>`;
+function url(path: string, priority = 0.7, freq = 'weekly', lastmod?: string): string {
+  const mod = lastmod ?? new Date().toISOString();
+  return `<url><loc>${SITE_URL}${path}</loc><lastmod>${mod}</lastmod><changefreq>${freq}</changefreq><priority>${priority}</priority></url>`;
 }
 
 function buildSitemap(urls: string[]): Response {
@@ -31,7 +32,8 @@ export async function GET(_req: Request, { params }: Params) {
   if (id === '0') {
     const staticUrls = [
       url('/', 1.0, 'daily'),
-      url('/search/', 0.9, 'daily'),
+      // '/search/' is intentionally excluded — it's disallowed in robots.txt
+      // and noindexed on the page itself (thin/duplicate query-param content).
       url('/blog/', 0.8, 'weekly'),
       url('/about/', 0.5, 'monthly'),
       url('/privacy/', 0.3, 'monthly'),
@@ -65,7 +67,7 @@ export async function GET(_req: Request, { params }: Params) {
   /** Sitemap 2: blog posts */
   if (id === '2') {
     const posts = getAllPosts();
-    const blogUrls = posts.map(p => url(`/blog/${p.slug}/`, 0.7, 'weekly'));
+    const blogUrls = posts.map(p => url(`/blog/${p.slug}/`, 0.7, 'weekly', new Date(p.date).toISOString()));
     return buildSitemap(blogUrls.length ? blogUrls : [url('/blog/', 0.7, 'weekly')]);
   }
 

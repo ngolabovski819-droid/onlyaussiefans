@@ -1,18 +1,19 @@
-import { states } from './states';
-
 export interface FilterOption {
   label: string;
   terms: string[]; // mapped to about.ilike searches
-  href?: string;
 }
 
 export interface FilterGroup {
   id: string;
   label: string;
-  type: 'terms' | 'price' | 'location'; // 'location' renders as state links
+  type: 'terms' | 'price';
   options: FilterOption[];
 }
 
+// Location and Ethnicity were removed: Location duplicated the state/city
+// browse pages, and Ethnicity's match counts against the live `about` bio
+// text were too thin to be useful. Fetish and Profession got a few extra
+// options that were verified against the live database first.
 export const filterGroups: FilterGroup[] = [
   {
     id: 'appearance',
@@ -28,31 +29,6 @@ export const filterGroups: FilterGroup[] = [
       { label: 'Thick', terms: ['thick', 'thicc', 'phat'] },
       { label: 'Hourglass', terms: ['hourglass', 'curves'] },
     ],
-  },
-  {
-    id: 'ethnicity',
-    label: 'Ethnicity',
-    type: 'terms',
-    options: [
-      { label: 'Asian', terms: ['asian', 'japanese', 'korean', 'chinese'] },
-      { label: 'Latina', terms: ['latina', 'hispanic', 'latinx'] },
-      { label: 'Ebony', terms: ['ebony', 'black'] },
-      { label: 'Caucasian', terms: ['caucasian', 'white', 'european'] },
-      { label: 'Indian', terms: ['indian', 'desi', 'south asian'] },
-      { label: 'Middle Eastern', terms: ['arabic', 'middle east', 'persian'] },
-      { label: 'Mixed', terms: ['mixed', 'biracial', 'mixed race'] },
-      { label: 'Filipina', terms: ['filipina', 'philippine', 'pinay'] },
-    ],
-  },
-  {
-    id: 'location',
-    label: 'Location',
-    type: 'location',
-    options: states.map((s) => ({
-      label: `${s.abbr} – ${s.label}`,
-      terms: s.terms,
-      href: `/${s.urlSlug}/`,
-    })),
   },
   {
     id: 'gender',
@@ -98,8 +74,11 @@ export const filterGroups: FilterGroup[] = [
       { label: 'BDSM', terms: ['bdsm', 'bondage', 'kink'] },
       { label: 'Cosplay', terms: ['cosplay', 'costume', 'anime'] },
       { label: 'Roleplay', terms: ['roleplay', 'role play'] },
-      { label: 'Bondage', terms: ['bondage', 'tied', 'restrained'] },
       { label: 'Latex', terms: ['latex', 'rubber', 'pvc'] },
+      { label: 'ASMR', terms: ['asmr'] },
+      { label: 'Voyeur', terms: ['voyeur', 'exhibitionist'] },
+      { label: 'Femdom', terms: ['femdom'] },
+      { label: 'Findom', terms: ['findom'] },
     ],
   },
   {
@@ -134,6 +113,11 @@ export const filterGroups: FilterGroup[] = [
       { label: 'Student', terms: ['student', 'college', 'uni', 'university'] },
       { label: 'Model', terms: ['model', 'modelling', 'instagram model'] },
       { label: 'Fitness Instructor', terms: ['trainer', 'pt', 'personal trainer', 'instructor'] },
+      { label: 'Dancer', terms: ['dancer', 'stripper'] },
+      { label: 'Cosplayer', terms: ['cosplayer'] },
+      { label: 'Yoga Instructor', terms: ['yoga'] },
+      { label: 'Waitress', terms: ['waitress', 'bartender'] },
+      { label: 'Influencer', terms: ['influencer'] },
     ],
   },
   {

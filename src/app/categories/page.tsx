@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { categories } from '@/config/categories';
 
 export const metadata: Metadata = {
-  title: 'OnlyFans Categories — Browse Australian Creators | OnlyAussieFans',
+  // Already includes the site-name suffix — bypass the layout's title
+  // template (%s | OnlyAussieFans) so it isn't doubled up.
+  title: { absolute: 'OnlyFans Categories — Browse Australian Creators | OnlyAussieFans' },
   description:
     'Browse all Australian OnlyFans categories — MILF, BBW, teen, latina, ebony, fitness, trans, free and more. Find the perfect Aussie creator for every taste.',
   alternates: { canonical: 'https://onlyaussiefans.com/categories/' },
@@ -22,6 +24,11 @@ const breadcrumbSchema = {
 
 // ── Section definitions ────────────────────────────────────────────────────
 const SECTIONS: { heading: string; emoji: string; slugs: string[] }[] = [
+  {
+    heading: 'Featured',
+    emoji: '⭐',
+    slugs: ['best-aussie-onlyfans', 'verified-aussie-onlyfans', 'new-australian-onlyfans-creators', 'under-10-aussie-onlyfans'],
+  },
   {
     heading: 'Most Popular',
     emoji: '🔥',

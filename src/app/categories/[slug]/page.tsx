@@ -19,11 +19,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const cat = getCategoryBySlug(slug);
   if (!cat) return {};
-  const title = `${cat.label} Australian OnlyFans Creators — Best Aussie ${cat.label} OnlyFans`;
-  const desc  = `Find the best ${cat.label} OnlyFans creators from Australia. Browse verified Aussie ${cat.label.toLowerCase()} creators sorted by popularity. Updated daily.`;
+  const title = cat.metaTitle ?? `${cat.label} Australian OnlyFans Creators — Best Aussie ${cat.label} OnlyFans`;
+  const desc  = cat.metaDesc ?? `Find the best ${cat.label} OnlyFans creators from Australia. Browse verified Aussie ${cat.label.toLowerCase()} creators sorted by popularity. Updated daily.`;
   const url   = `${SITE_URL}/categories/${slug}/`;
   return {
-    title,
+    // cat.metaTitle overrides already include the "| OnlyAussieFans" suffix —
+    // bypass the layout's title template so it isn't doubled up. The
+    // generic (non-override) title has no suffix, so it uses the template.
+    title: cat.metaTitle ? { absolute: cat.metaTitle } : title,
     description: desc,
     alternates: { canonical: url },
     openGraph: { title, description: desc, url, images: [{ url: `${SITE_URL}/categories/${slug}/opengraph-image` }] },
@@ -42,32 +45,41 @@ export default async function CategoryPage({ params }: Props) {
       locationTerms: ['australia'],
       categoryTerms: cat.terms.length > 0 ? cat.terms : undefined,
       price: cat.priceFilter,
-      sort: 'popular',
+      verified: cat.verified,
+      sort: cat.sort ?? 'popular',
     },
     1,
     24,
   );
 
+  const genericFaqs = [
+    {
+      q: `Where can I find ${cat.label} OnlyFans creators from Australia?`,
+      a: `OnlyAussieFans lists hundreds of Australian ${cat.label.toLowerCase()} OnlyFans creators. Browse our directory to find verified Aussie creators sorted by popularity.`,
+    },
+    {
+      q: `Are there free ${cat.label} Australian OnlyFans accounts?`,
+      a: `Yes — some Australian ${cat.label.toLowerCase()} creators offer free subscriptions. Filter by price on our search page to find free accounts.`,
+    },
+    {
+      q: `How many ${cat.label} OnlyFans creators are in Australia?`,
+      a: `Our Australian ${cat.label.toLowerCase()} creator directory is updated regularly as new profiles are discovered.`,
+    },
+    {
+      q: `Which Australian cities have the most ${cat.label} OnlyFans creators?`,
+      a: 'Sydney and Melbourne tend to have the most content creators of all categories. Use our state and city filters to narrow your search to specific locations.',
+    },
+  ];
+  const faqs = cat.faqs ?? genericFaqs;
+
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: `Where can I find ${cat.label} OnlyFans creators from Australia?`,
-        acceptedAnswer: { '@type': 'Answer', text: `OnlyAussieFans lists hundreds of Australian ${cat.label.toLowerCase()} OnlyFans creators. Browse our directory to find verified Aussie creators sorted by popularity.` },
-      },
-      {
-        '@type': 'Question',
-        name: `Are there free ${cat.label} Australian OnlyFans accounts?`,
-        acceptedAnswer: { '@type': 'Answer', text: `Yes — some Australian ${cat.label.toLowerCase()} creators offer free subscriptions. Filter by price on our search page to find free accounts.` },
-      },
-      {
-        '@type': 'Question',
-        name: `How many ${cat.label} OnlyFans creators are in Australia?`,
-        acceptedAnswer: { '@type': 'Answer', text: `Our Australian ${cat.label.toLowerCase()} creator directory is updated regularly as new profiles are discovered.` },
-      },
-    ],
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
   };
 
   const breadcrumbSchema = {
@@ -96,18 +108,19 @@ export default async function CategoryPage({ params }: Props) {
         </nav>
 
         <div className="location-page-header">
-          <h1>{cat.emoji && `${cat.emoji} `}Best {cat.label} Australian OnlyFans Creators</h1>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
-            Verified Australian {cat.label.toLowerCase()} creators
-          </p>
+          <h1>{cat.h1 ?? `${cat.emoji ? `${cat.emoji} ` : ''}Best ${cat.label} Australian OnlyFans Creators`}</h1>
+          {!cat.intro && (
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              Verified Australian {cat.label.toLowerCase()} creators
+            </p>
+          )}
           <p className="location-intro">
-            Discover the top Australian {cat.label} OnlyFans creators in our daily-updated directory.
-            All profiles are verified Aussie creators searched by location and interests.
-            Browse, filter and find your perfect Australian {cat.label.toLowerCase()} creator below.
+            {cat.intro ?? `Discover the top Australian ${cat.label} OnlyFans creators in our daily-updated directory. All profiles are verified Aussie creators searched by location and interests. Browse, filter and find your perfect Australian ${cat.label.toLowerCase()} creator below.`}
           </p>
         </div>
 
         <CreatorGrid
+          key={slug}
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}
@@ -115,47 +128,32 @@ export default async function CategoryPage({ params }: Props) {
           locationTerms={['australia']}
           categoryTerms={cat.terms.length > 0 ? cat.terms : undefined}
           price={cat.priceFilter}
+          verified={cat.verified}
+          sort={cat.sort}
           scope={scope}
         />
 
-        {/* Internal linking: state × category */}
-        <RelatedLocations mode="category-in-states" categorySlug={slug} categoryLabel={cat.label} />
+        {/* Internal linking: state × category (skipped for attribute-style
+            pages — the generic "Best {label} in {location}" template reads
+            wrong once {label} is already a full phrase like "Best Aussie
+            OnlyFans"). */}
+        {!cat.h1 && <RelatedLocations mode="category-in-states" categorySlug={slug} categoryLabel={cat.label} />}
 
         {/* FAQ */}
         <section className="faq-section">
           <h2 className="faq-heading">Frequently Asked Questions</h2>
           <dl className="faq-list">
-            <details className="faq-item">
-              <summary className="faq-question">Where can I find {cat.label} OnlyFans creators from Australia?</summary>
-              <dd className="faq-answer">
-                OnlyAussieFans lists hundreds of Australian {cat.label.toLowerCase()} OnlyFans creators.
-                Browse our directory, filter by state or city, and find verified Aussie creators sorted by popularity.
-              </dd>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">Are there free {cat.label} Australian OnlyFans accounts?</summary>
-              <dd className="faq-answer">
-                Yes — some Australian {cat.label.toLowerCase()} creators offer free subscriptions or trial promotions.
-                Use our price filter on the search page to find free accounts specifically.
-              </dd>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">How many {cat.label} OnlyFans creators are in Australia?</summary>
-              <dd className="faq-answer">
-                Our Australian {cat.label.toLowerCase()} creator directory is updated regularly with new profiles.
-              </dd>
-            </details>
-            <details className="faq-item">
-              <summary className="faq-question">Which Australian cities have the most {cat.label} OnlyFans creators?</summary>
-              <dd className="faq-answer">
-                Sydney and Melbourne tend to have the most content creators of all categories.
-                Use our state and city filters to narrow your search to specific locations.
-              </dd>
-            </details>
+            {faqs.map((faq, i) => (
+              <details key={i} className="faq-item">
+                <summary className="faq-question">{faq.q}</summary>
+                <dd className="faq-answer">{faq.a}</dd>
+              </details>
+            ))}
           </dl>
         </section>
 
         {/* State quick links */}
+        {!cat.h1 && (
         <section style={{ paddingBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem' }}>
             Browse {cat.label} Creators by State
@@ -168,6 +166,7 @@ export default async function CategoryPage({ params }: Props) {
             ))}
           </div>
         </section>
+        )}
       </div>
     </>
   );

@@ -80,6 +80,7 @@ export default async function SearchPage({ searchParams }: Props) {
         </div>
 
         <CreatorGrid
+          key={`${q}|${verified}|${price}|${sort}|${sp.filter_groups ?? ''}`}
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}

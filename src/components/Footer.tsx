@@ -61,6 +61,8 @@ export default function Footer() {
           <div className="footer-col">
             <h3 className="footer-heading">Information</h3>
             <ul className="footer-list">
+              <li><Link href="/categories/best-aussie-onlyfans/" className="footer-link">Best Aussie OnlyFans</Link></li>
+              <li><Link href="/categories/free/" className="footer-link">Free Australian OnlyFans</Link></li>
               <li><Link href="/about" className="footer-link">About Us</Link></li>
               <li><Link href="/blog" className="footer-link">Blog</Link></li>
               <li><Link href="/search" className="footer-link">Search Creators</Link></li>

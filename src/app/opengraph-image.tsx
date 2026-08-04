@@ -1,18 +1,9 @@
 import { ImageResponse } from 'next/og';
-import { getCategoryBySlug } from '@/config/categories';
 
 export const runtime = 'edge';
 export const size    = { width: 1200, height: 630 };
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
-
-export default async function OGImage({ params }: Props) {
-  const { slug } = await params;
-  const cat = getCategoryBySlug(slug);
-  const label = cat?.label ?? slug;
-
+export default async function OGImage() {
   return new ImageResponse(
     (
       <div
@@ -25,21 +16,21 @@ export default async function OGImage({ params }: Props) {
           gap: 20,
         }}
       >
-        <div style={{ fontSize: 24, color: '#8888aa', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-          🇦🇺  OnlyAussieFans
+        <div style={{ display: 'flex', fontSize: 24, color: '#8888aa', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+          🇦🇺 Australia&apos;s #1 OnlyFans Directory
         </div>
         <div style={{
           display: 'flex',
-          fontSize: 72, fontWeight: 800,
+          fontSize: 76, fontWeight: 800,
           background: 'linear-gradient(135deg,#7c3aed,#ec4899)',
           backgroundClip: 'text', color: 'transparent',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           textAlign: 'center',
         }}>
-          {label} OnlyFans
+          OnlyAussieFans
         </div>
-        <div style={{ display: 'flex', fontSize: 28, color: '#8888aa' }}>
-          Best Australian {label} Creators
+        <div style={{ display: 'flex', fontSize: 30, color: '#8888aa', textAlign: 'center' }}>
+          20,000+ Verified Australian OnlyFans Creators
         </div>
       </div>
     ),

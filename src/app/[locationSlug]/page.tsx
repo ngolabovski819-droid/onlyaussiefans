@@ -24,7 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!loc) return {};
   const url = `${SITE_URL}/${locationSlug}/`;
   return {
-    title: loc.metaTitle,
+    // metaTitle already includes the "| OnlyAussieFans" suffix — bypass the
+    // layout's title template (%s | OnlyAussieFans) so it isn't doubled up.
+    title: { absolute: loc.metaTitle },
     description: loc.metaDesc,
     alternates: { canonical: url },
     openGraph: {
@@ -134,6 +136,7 @@ export default async function LocationPage({ params }: Props) {
 
         {/* Creator grid */}
         <CreatorGrid
+          key={locationSlug}
           initialCreators={creators}
           initialTotal={total}
           initialHasMore={hasMore}

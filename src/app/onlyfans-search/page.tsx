@@ -13,7 +13,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 export const metadata: Metadata = {
   title: 'Australian OnlyFans Search Engine — Find AU Creators by Category & Location',
   description:
-    'The best Australian OnlyFans search engine. Browse 500+ verified AU creators by category, city and state. Free, MILF, Latina, BBW, Blonde and more.',
+    'The best Australian OnlyFans search engine. Browse 20,000+ verified AU creators by category, city and state. Free, MILF, Latina, BBW, Blonde and more.',
   alternates: { canonical: `${SITE_URL}/onlyfans-search/` },
   openGraph: {
     title: 'Australian OnlyFans Search Engine',
