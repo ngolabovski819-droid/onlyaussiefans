@@ -1,9 +1,12 @@
-import { after, NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSponsorCampaign, isSponsorScope } from '@/config/sponsors';
+import { isBotUserAgent } from '@/lib/botDetection';
+import { extractClientIp, hashIp, isDatacenterIp, isRateLimited } from '@/lib/clickIntegrity';
+import { verifyClickToken } from '@/lib/clickToken';
 
 export const runtime = 'nodejs';
-
-const BOT_USER_AGENT = /bot|crawl|spider|slurp|curl|wget|python-requests|headless|facebookexternalhit|bingpreview/iu;
+const CLICK_IP_SALT = process.env.CLICK_IP_SALT;
+const CLICK_TOKEN_SECRET = process.env.CLICK_TOKEN_SECRET;
 const OWN_HOSTS = new Set([
   'onlyaussiefans.com',
   'www.onlyaussiefans.com',
@@ -36,9 +39,12 @@ function explicitPlacement(value: string | null): string | null {
 }
 
 interface ClickData {
+  username: string;
   userAgent: string | null;
   referrer: string | null;
   placement: string | null;
+  clientIp: string | null;
+  linkToken: string | null;
 }
 
 async function logSponsorClick(table: string, data: ClickData) {
@@ -47,6 +53,31 @@ async function logSponsorClick(table: string, data: ClickData) {
   if (!supabaseUrl || !supabaseKey || !/^sponsor_clicks_[a-z0-9_]+$/u.test(table)) return;
 
   try {
+    // Tracking must never delay or break the advertiser redirect — but this whole function IS
+    // now awaited by the caller rather than deferred via after(): a deferred write meant the
+    // redirect could return before the row (and the rate-limit check below) landed, so a
+    // rapid-fire script could get several requests' worth of "no prior clicks yet" checks in
+    // before any of them had actually written a row (verified directly: 7 rapid hits from the
+    // same IP all got logged instead of being capped at 5). Rate limiting only means anything if
+    // "how many clicks already happened" is accurate at check time.
+    const ipHash = data.clientIp && CLICK_IP_SALT ? hashIp(data.clientIp, CLICK_IP_SALT) : null;
+    const linkVerified = CLICK_TOKEN_SECRET
+      ? verifyClickToken(data.linkToken, data.username, CLICK_TOKEN_SECRET)
+      : false;
+
+    // Same IP hammering this exact link is a script, whatever UA it claims — checked before
+    // logging so a rate-limited hit still gets its redirect but never counts as a click.
+    if (ipHash) {
+      const rateLimited = await isRateLimited({
+        supabaseUrl,
+        supabaseKey,
+        table,
+        timestampColumn: 'clicked_at',
+        ipHash,
+      });
+      if (rateLimited) return;
+    }
+
     await fetch(`${supabaseUrl}/rest/v1/${table}`, {
       method: 'POST',
       headers: {
@@ -59,6 +90,9 @@ async function logSponsorClick(table: string, data: ClickData) {
         user_agent: data.userAgent,
         referrer: data.referrer,
         placement: data.placement,
+        ip_hash: ipHash,
+        is_datacenter_ip: isDatacenterIp(data.clientIp),
+        link_verified: linkVerified,
       }]),
       cache: 'no-store',
     });
@@ -80,10 +114,19 @@ export async function GET(
   const userAgent = request.headers.get('user-agent');
   const referrer = request.headers.get('referer');
 
-  if (campaign?.clickTable && !BOT_USER_AGENT.test(userAgent ?? '')) {
+  if (campaign?.clickTable && !isBotUserAgent(userAgent)) {
     const placement = explicitPlacement(request.nextUrl.searchParams.get('placement'))
       ?? derivePlacement(referrer);
-    after(() => logSponsorClick(campaign.clickTable!, { userAgent, referrer, placement }));
+    const clientIp = extractClientIp(request.headers.get('x-forwarded-for'));
+    const linkToken = request.nextUrl.searchParams.get('t');
+    await logSponsorClick(campaign.clickTable, {
+      username: decodedUsername,
+      userAgent,
+      referrer,
+      placement,
+      clientIp,
+      linkToken,
+    });
   }
 
   return NextResponse.redirect(destination, { status: 302 });
