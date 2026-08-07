@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSponsorCampaign, isSponsorScope } from '@/config/sponsors';
 import { isBotUserAgent } from '@/lib/botDetection';
-import { extractClientIp, hashIp, isDatacenterIp, isRateLimited } from '@/lib/clickIntegrity';
+import { extractClientIp, hashIp, isDatacenterIp, isRateLimited, extractGeo } from '@/lib/clickIntegrity';
 import { verifyClickToken } from '@/lib/clickToken';
 
 export const runtime = 'nodejs';
@@ -45,6 +45,8 @@ interface ClickData {
   placement: string | null;
   clientIp: string | null;
   linkToken: string | null;
+  country: string | null;
+  city: string | null;
 }
 
 async function logSponsorClick(table: string, data: ClickData) {
@@ -93,6 +95,9 @@ async function logSponsorClick(table: string, data: ClickData) {
         ip_hash: ipHash,
         is_datacenter_ip: isDatacenterIp(data.clientIp),
         link_verified: linkVerified,
+        ip_address: data.clientIp,
+        country: data.country,
+        city: data.city,
       }]),
       cache: 'no-store',
     });
@@ -119,6 +124,7 @@ export async function GET(
       ?? derivePlacement(referrer);
     const clientIp = extractClientIp(request.headers.get('x-forwarded-for'));
     const linkToken = request.nextUrl.searchParams.get('t');
+    const geo = extractGeo(request.headers);
     await logSponsorClick(campaign.clickTable, {
       username: decodedUsername,
       userAgent,
@@ -126,6 +132,8 @@ export async function GET(
       placement,
       clientIp,
       linkToken,
+      country: geo.country,
+      city: geo.city,
     });
   }
 
