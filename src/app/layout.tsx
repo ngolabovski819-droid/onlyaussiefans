@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import AgeGate from '@/components/AgeGate';
 import SponsoredLinkTokenizer from '@/components/SponsoredLinkTokenizer';
 
-const GA_ID = 'G-7L95HMVCH9';
+const GA_ID = 'G-4CL35KP78J';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const syne  = Syne({ subsets: ['latin'], variable: '--font-syne',  display: 'swap', weight: ['700', '800'] });
