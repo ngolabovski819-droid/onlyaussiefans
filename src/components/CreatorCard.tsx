@@ -17,6 +17,22 @@ function formatPrice(price: number | null): string {
   return `A$${price.toFixed(2)}/mo`;
 }
 
+/**
+ * Deterministic lead-image offset for paid placements so a visitor moving
+ * between the homepage, a state page, and a category page sees a different
+ * creative each time. Same inputs on server and client, so no hydration drift.
+ * The homepage keeps the campaign's chosen cover; every other scope rotates
+ * to a non-cover image.
+ */
+function getScopeImageOffset(scope: string | undefined, imageCount: number): number {
+  if (!scope || scope === 'home' || imageCount < 2) return 0;
+  let hash = 0;
+  for (let i = 0; i < scope.length; i += 1) {
+    hash = (hash * 31 + scope.charCodeAt(i)) >>> 0;
+  }
+  return 1 + (hash % (imageCount - 1));
+}
+
 function getBestBundle(creator: Creator): string | null {
   if (creator.bundle1Price && creator.bundle1Duration && creator.bundle1Discount) {
     return `-${creator.bundle1Discount}% for ${creator.bundle1Duration} months`;
@@ -27,11 +43,16 @@ function getBestBundle(creator: Creator): string | null {
 export default function CreatorCard({ creator, index, placementScope }: Props) {
   // Campaign creatives only apply to rows explicitly inserted as paid placements.
   const campaign = creator.sponsored ? getSponsorCampaign(creator.username) : undefined;
-  const galleryImages = Array.from(new Set([
+  const orderedImages = Array.from(new Set([
     campaign?.imageOverride ?? creator.avatar ?? creator.avatarC144,
     ...(campaign?.galleryImages ?? []),
     ...(!campaign?.imageOverride && creator.header ? [creator.header] : []),
   ].filter((url): url is string => Boolean(url))));
+  // Sponsored galleries start from a scope-specific image; organic cards are untouched.
+  const imageOffset = campaign ? getScopeImageOffset(placementScope, orderedImages.length) : 0;
+  const galleryImages = imageOffset
+    ? [...orderedImages.slice(imageOffset), ...orderedImages.slice(0, imageOffset)]
+    : orderedImages;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const activeImage = galleryImages[activeImageIndex] ?? '/no-image.png';
   const { src, srcSet, sizes } = activeImage.startsWith('/')
