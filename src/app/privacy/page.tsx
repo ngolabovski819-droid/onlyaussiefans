@@ -36,8 +36,8 @@ export default function PrivacyPage() {
       <h2>Third-Party Services</h2>
       <p>
         Our site links to OnlyFans creator profiles. When you click a creator link, you leave our
-        site and OnlyFans&apos; privacy policy applies. We use image proxy services (images.weserv.nl)
-        to serve optimised images.
+        site and OnlyFans&apos; privacy policy applies. Creator images are served through our site&apos;s
+        image optimisation infrastructure.
       </p>
 
       <h2>Data Retention</h2>

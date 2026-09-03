@@ -72,7 +72,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="rating" content="adult" />
         <meta name="DC.language" content="en-AU" />
-        <link rel="preconnect" href="https://images.weserv.nl" />
         <link rel="alternate" hrefLang="en-AU" href={SITE_URL} />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.svg" sizes="any" />
@@ -92,4 +91,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
