@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!cat) return {};
   const title = cat.metaTitle ?? `${cat.label} Australian OnlyFans Creators — Best Aussie ${cat.label} OnlyFans`;
   const desc  = cat.metaDesc ?? `Find the best ${cat.label} OnlyFans creators from Australia. Browse verified Aussie ${cat.label.toLowerCase()} creators sorted by popularity. Updated daily.`;
-  const url   = `${SITE_URL}/categories/${slug}/`;
+  const url   = `${SITE_URL}/categories/${slug}`;
   return {
     // cat.metaTitle overrides already include the "| OnlyAussieFans" suffix —
     // bypass the layout's title template so it isn't doubled up. The
@@ -87,8 +87,8 @@ export default async function CategoryPage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: 'Categories', item: `${SITE_URL}/categories/` },
-      { '@type': 'ListItem', position: 3, name: cat.label, item: `${SITE_URL}/categories/${slug}/` },
+      { '@type': 'ListItem', position: 2, name: 'Categories', item: `${SITE_URL}/categories` },
+      { '@type': 'ListItem', position: 3, name: cat.label, item: `${SITE_URL}/categories/${slug}` },
     ],
   };
 

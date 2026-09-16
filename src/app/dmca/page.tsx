@@ -5,7 +5,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 export const metadata: Metadata = {
   title: 'DMCA & Content Removal — OnlyAussieFans',
   description: 'Submit a DMCA takedown notice or request content removal from OnlyAussieFans.',
-  alternates: { canonical: `${SITE_URL}/dmca/` },
+  alternates: { canonical: `${SITE_URL}/dmca` },
 };
 
 export default function DMCAPage() {

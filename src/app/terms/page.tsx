@@ -5,7 +5,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 export const metadata: Metadata = {
   title: 'Terms of Service — OnlyAussieFans',
   description: 'Terms of service for OnlyAussieFans, Australia\'s OnlyFans search directory.',
-  alternates: { canonical: `${SITE_URL}/terms/` },
+  alternates: { canonical: `${SITE_URL}/terms` },
 };
 
 export default function TermsPage() {

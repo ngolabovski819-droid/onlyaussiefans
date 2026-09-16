@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!loc || !cat) return {};
   const title = `Best ${cat.label} OnlyFans in ${loc.label} (2026)`;
   const desc  = `Find the top ${cat.label} OnlyFans creators from ${loc.label}, Australia. Browse verified Aussie ${cat.label.toLowerCase()} creators updated daily.`;
-  const url   = `${SITE_URL}/${locationSlug}/${categorySlug}/`;
+  const url   = `${SITE_URL}/${locationSlug}/${categorySlug}`;
   return {
     title,
     description: desc,
@@ -66,8 +66,8 @@ export default async function LocationCategoryPage({ params }: Props) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: loc.label, item: `${SITE_URL}/${locationSlug}/` },
-      { '@type': 'ListItem', position: 3, name: cat.label, item: `${SITE_URL}/${locationSlug}/${categorySlug}/` },
+      { '@type': 'ListItem', position: 2, name: loc.label, item: `${SITE_URL}/${locationSlug}` },
+      { '@type': 'ListItem', position: 3, name: cat.label, item: `${SITE_URL}/${locationSlug}/${categorySlug}` },
     ],
   };
 

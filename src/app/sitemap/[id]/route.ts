@@ -34,31 +34,31 @@ export async function GET(_req: Request, { params }: Params) {
       url('/', 1.0, 'daily'),
       // '/search/' is intentionally excluded — it's disallowed in robots.txt
       // and noindexed on the page itself (thin/duplicate query-param content).
-      url('/blog/', 0.8, 'weekly'),
-      url('/about/', 0.5, 'monthly'),
-      url('/privacy/', 0.3, 'monthly'),
-      url('/terms/', 0.3, 'monthly'),
-      url('/dmca/', 0.3, 'monthly'),
+      url('/blog', 0.8, 'weekly'),
+      url('/about', 0.5, 'monthly'),
+      url('/privacy', 0.3, 'monthly'),
+      url('/terms', 0.3, 'monthly'),
+      url('/dmca', 0.3, 'monthly'),
     ];
-    const stateUrls = states.map(s => url(`/${s.urlSlug}/`, 0.9, 'daily'));
-    const cityUrls  = cities.map(c => url(`/${c.urlSlug}/`, 0.8, 'daily'));
+    const stateUrls = states.map(s => url(`/${s.urlSlug}`, 0.9, 'daily'));
+    const cityUrls  = cities.map(c => url(`/${c.urlSlug}`, 0.8, 'daily'));
     return buildSitemap([...staticUrls, ...stateUrls, ...cityUrls]);
   }
 
   /** Sitemap 1: categories + combo pages */
   if (id === '1') {
-    const catUrls = categories.map(c => url(`/categories/${c.slug}/`, 0.85, 'daily'));
+    const catUrls = categories.map(c => url(`/categories/${c.slug}`, 0.85, 'daily'));
     // State × popular category combos
     const popularCatSlugs = categories.filter(c => c.popular).map(c => c.slug);
     const comboUrls: string[] = [];
     for (const s of states) {
       for (const cs of popularCatSlugs) {
-        comboUrls.push(url(`/${s.urlSlug}/${cs}/`, 0.7, 'weekly'));
+        comboUrls.push(url(`/${s.urlSlug}/${cs}`, 0.7, 'weekly'));
       }
     }
     for (const c of cities) {
       for (const cs of popularCatSlugs) {
-        comboUrls.push(url(`/${c.urlSlug}/${cs}/`, 0.6, 'weekly'));
+        comboUrls.push(url(`/${c.urlSlug}/${cs}`, 0.6, 'weekly'));
       }
     }
     return buildSitemap([...catUrls, ...comboUrls]);
@@ -67,8 +67,8 @@ export async function GET(_req: Request, { params }: Params) {
   /** Sitemap 2: blog posts */
   if (id === '2') {
     const posts = getAllPosts();
-    const blogUrls = posts.map(p => url(`/blog/${p.slug}/`, 0.7, 'weekly', new Date(p.date).toISOString()));
-    return buildSitemap(blogUrls.length ? blogUrls : [url('/blog/', 0.7, 'weekly')]);
+    const blogUrls = posts.map(p => url(`/blog/${p.slug}`, 0.7, 'weekly', new Date(p.date).toISOString()));
+    return buildSitemap(blogUrls.length ? blogUrls : [url('/blog', 0.7, 'weekly')]);
   }
 
   return NextResponse.json({ error: 'Not found' }, { status: 404 });

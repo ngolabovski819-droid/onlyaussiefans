@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: { absolute: 'OnlyFans Categories — Browse Australian Creators | OnlyAussieFans' },
   description:
     'Browse all Australian OnlyFans categories — MILF, BBW, teen, latina, ebony, fitness, trans, free and more. Find the perfect Aussie creator for every taste.',
-  alternates: { canonical: 'https://onlyaussiefans.com/categories/' },
+  alternates: { canonical: 'https://onlyaussiefans.com/categories' },
 };
 
 const SITE_URL = 'https://onlyaussiefans.com';
@@ -18,7 +18,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-    { '@type': 'ListItem', position: 2, name: 'Categories', item: `${SITE_URL}/categories/` },
+    { '@type': 'ListItem', position: 2, name: 'Categories', item: `${SITE_URL}/categories` },
   ],
 };
 

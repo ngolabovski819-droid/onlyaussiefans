@@ -9,7 +9,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 export const metadata: Metadata = {
   title: 'Blog — Australian OnlyFans Tips & Guides',
   description: 'Tips, guides and news about Australian OnlyFans creators. Find advice on subscribing, discovering creators, and making the most of your experience.',
-  alternates: { canonical: `${SITE_URL}/blog/` },
+  alternates: { canonical: `${SITE_URL}/blog` },
 };
 
 export default function BlogPage() {

@@ -5,7 +5,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 export const metadata: Metadata = {
   title: 'Privacy Policy — OnlyAussieFans',
   description: 'Privacy policy for OnlyAussieFans. Learn how we collect, use and protect your data.',
-  alternates: { canonical: `${SITE_URL}/privacy/` },
+  alternates: { canonical: `${SITE_URL}/privacy` },
 };
 
 export default function PrivacyPage() {

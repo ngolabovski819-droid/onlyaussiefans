@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.description,
-    alternates: { canonical: `${SITE_URL}/blog/${slug}/` },
+    alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -62,7 +62,7 @@ export default async function BlogPostPage({ params }: Props) {
     dateModified: post.date,
     description: post.description,
     image: [post.image ?? `${SITE_URL}/opengraph-image`],
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${slug}/` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${slug}` },
     author: { '@type': 'Organization', name: 'OnlyAussieFans', url: SITE_URL },
     publisher: {
       '@type': 'Organization',

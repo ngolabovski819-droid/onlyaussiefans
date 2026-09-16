@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   title: 'Promote Your OnlyFans in Australia — Get Real Aussie Subscribers',
   description:
     'Feature your OnlyFans profile on OnlyAussieFans and reach Aussie fans actively searching Google. High-intent Australian SEO traffic that converts. Go live in 24 hours.',
-  alternates: { canonical: `${SITE_URL}/promote/` },
+  alternates: { canonical: `${SITE_URL}/promote` },
   openGraph: {
     title: 'Promote Your OnlyFans on OnlyAussieFans',
     description:
       'Get your profile in front of Australian fans searching Google right now. Real traffic, real subscribers, no password required.',
-    url: `${SITE_URL}/promote/`,
+    url: `${SITE_URL}/promote`,
     images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630 }],
   },
 };

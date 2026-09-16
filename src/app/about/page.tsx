@@ -5,7 +5,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://onlyaussiefans.com
 export const metadata: Metadata = {
   title: 'About OnlyAussieFans — Australia\'s #1 OnlyFans Directory',
   description: 'Learn about OnlyAussieFans, Australia\'s dedicated OnlyFans search engine. Discover how we index and organise Australian creators.',
-  alternates: { canonical: `${SITE_URL}/about/` },
+  alternates: { canonical: `${SITE_URL}/about` },
 };
 
 export default function AboutPage() {

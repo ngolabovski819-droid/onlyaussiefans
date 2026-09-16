@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const city  = !state ? getCityByUrlSlug(locationSlug) : null;
   const loc   = state ?? city;
   if (!loc) return {};
-  const url = `${SITE_URL}/${locationSlug}/`;
+  const url = `${SITE_URL}/${locationSlug}`;
   return {
     // metaTitle already includes the "| OnlyAussieFans" suffix — bypass the
     // layout's title template (%s | OnlyAussieFans) so it isn't doubled up.
@@ -76,9 +76,9 @@ export default async function LocationPage({ params }: Props) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
       ...(city && state
-        ? [{ '@type': 'ListItem', position: 2, name: state.label, item: `${SITE_URL}/${state.urlSlug}/` }]
+        ? [{ '@type': 'ListItem', position: 2, name: state.label, item: `${SITE_URL}/${state.urlSlug}` }]
         : []),
-      { '@type': 'ListItem', position: isState ? 2 : 3, name: loc.label, item: `${SITE_URL}/${locationSlug}/` },
+      { '@type': 'ListItem', position: isState ? 2 : 3, name: loc.label, item: `${SITE_URL}/${locationSlug}` },
     ],
   };
 
