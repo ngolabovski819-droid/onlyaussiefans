@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSponsorCampaign, isSponsorScope } from '@/config/sponsors';
+import { getSponsorCampaign, isSponsorScope, resolveGoAlias } from '@/config/sponsors';
 import { isBotUserAgent } from '@/lib/botDetection';
 import { extractClientIp, hashIp, isDatacenterIp, isRateLimited, extractGeo } from '@/lib/clickIntegrity';
 import { verifyClickToken } from '@/lib/clickToken';
@@ -111,8 +111,13 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> },
 ) {
   const { username } = await params;
-  let decodedUsername = username;
-  try { decodedUsername = decodeURIComponent(username); } catch {}
+  let slug = username;
+  try { slug = decodeURIComponent(username); } catch {}
+  // Vanity aliases (GO_ALIASES in src/config/sponsors.ts): `/go/bigtittytifff` resolves to
+  // emilylopz's campaign and is logged as placement 'vanity:bigtittytifff', so every shared
+  // link reports separately in the panel. Non-aliases resolve to themselves, so plain
+  // `/go/<username>` is unchanged.
+  const { username: decodedUsername, isAlias } = resolveGoAlias(slug);
   const campaign = getSponsorCampaign(decodedUsername);
   const destination = campaign?.linkOverride
     ?? `https://onlyfans.com/${encodeURIComponent(decodedUsername)}`;
@@ -120,8 +125,9 @@ export async function GET(
   const referrer = request.headers.get('referer');
 
   if (campaign?.clickTable && !isBotUserAgent(userAgent)) {
+    // A vanity alias self-identifies its placement the same way an explicit ?placement= does.
     const placement = explicitPlacement(request.nextUrl.searchParams.get('placement'))
-      ?? derivePlacement(referrer);
+      ?? (isAlias ? `vanity:${slug.trim().toLowerCase()}` : derivePlacement(referrer));
     const clientIp = extractClientIp(request.headers.get('x-forwarded-for'));
     const linkToken = request.nextUrl.searchParams.get('t');
     const geo = extractGeo(request.headers);

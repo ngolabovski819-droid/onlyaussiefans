@@ -266,3 +266,51 @@ export function getSearchSponsorCampaigns(): SponsorCampaign[] {
 export function isSponsorScope(value: string): boolean {
   return /^(home|search|directory|category:[a-z0-9-]+|location:[a-z0-9-]+|location-category:[a-z0-9-]+:[a-z0-9-]+)$/u.test(value);
 }
+
+/**
+ * Vanity slugs for the `/go/<slug>` redirect ONLY. Lets a sponsor share
+ * `onlyaussiefans.com/go/<anything>` — the OF username of a profile in the owner's promo
+ * sheet, an IG/TikTok persona, a per-campaign name — instead of `/go/<of-username>`. The
+ * route resolves the alias to the target's campaign (linkOverride + clickTable) and logs
+ * the click with `placement: 'vanity:<alias>'`, so each shared link reports separately.
+ *
+ * Alias → real OF username, both matched case-insensitively. Adding one is a single line +
+ * deploy: no DNS, no Vercel config, no migration (it reuses the target's table). Cards,
+ * profile pages and click-token minting never see aliases — they key on the real username
+ * via getSponsorCampaign().
+ *
+ * Mirrors GO_ALIASES in the fanspedia and findbyface repos; each site's alias list is
+ * independent, since promo-sheet rows are sold per-site.
+ */
+export const GO_ALIASES: Record<string, string> = {
+  // emilylopz
+  bigtittytifff: 'emilylopz',
+};
+
+const NORMALIZED_ALIASES = new Map(
+  Object.entries(GO_ALIASES).map(([alias, username]) => [
+    alias.trim().toLowerCase(),
+    username.trim().toLowerCase(),
+  ]),
+);
+
+// Build-time guard (runs on module load, so `next build` fails loudly on a bad config): an
+// alias that shadows a real campaign username would silently hijack that sponsor's /go/ link,
+// and an alias pointing at a non-sponsor would redirect but never log.
+for (const [alias, username] of NORMALIZED_ALIASES) {
+  if (NORMALIZED.has(alias)) {
+    throw new Error(`GO_ALIASES: "${alias}" collides with a SPONSOR_CAMPAIGNS username`);
+  }
+  if (!NORMALIZED.has(username)) {
+    throw new Error(`GO_ALIASES: "${alias}" points at "${username}", which has no campaign`);
+  }
+}
+
+/**
+ * Resolve a `/go/<slug>` path segment to the real sponsor username. Non-aliases resolve to
+ * themselves unchanged, so existing `/go/<username>` links behave exactly as before.
+ */
+export function resolveGoAlias(slug: string): { username: string; isAlias: boolean } {
+  const target = NORMALIZED_ALIASES.get(slug.trim().toLowerCase());
+  return target ? { username: target, isAlias: true } : { username: slug, isAlias: false };
+}
