@@ -285,10 +285,13 @@ export function isSponsorScope(value: string): boolean {
 export const GO_ALIASES: Record<string, string> = {
   // emilylopz
   bigtittytifff: 'emilylopz',
+  bxbyclash: 'emilylopz',
   // rocketreynaxo
   bigbootyjudy20: 'rocketreynaxo',
+  shaycrazychic: 'rocketreynaxo',
   // sophiescrts
   heyitsjudyy: 'sophiescrts',
+  zoeycollins8x: 'sophiescrts',
   // rinayanami
   amelielou: 'rinayanami',
 };
