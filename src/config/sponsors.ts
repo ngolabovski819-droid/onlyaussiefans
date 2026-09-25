@@ -285,6 +285,12 @@ export function isSponsorScope(value: string): boolean {
 export const GO_ALIASES: Record<string, string> = {
   // emilylopz
   bigtittytifff: 'emilylopz',
+  // rocketreynaxo
+  bigbootyjudy20: 'rocketreynaxo',
+  // sophiescrts
+  heyitsjudyy: 'sophiescrts',
+  // rinayanami
+  amelielou: 'rinayanami',
 };
 
 const NORMALIZED_ALIASES = new Map(
