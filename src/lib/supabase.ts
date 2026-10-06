@@ -382,7 +382,14 @@ export async function fetchCreators(params: SearchParams): Promise<SearchResult>
   return { creators, total: null, hasMore };
 }
 
-/** Fetch configured paid creators by case-insensitive username. */
+/**
+ * Fetch configured paid creators by case-insensitive username.
+ *
+ * ORing several `ilike` filters makes Postgres scan every profile (five names
+ * hit the statement timeout), so all names are resolved with one indexed
+ * exact-match lookup first. Only names it misses fall back to a single-name
+ * `ilike`, which stays fast on its own.
+ */
 export async function fetchCreatorsByUsernames(
   usernames: string[],
   revalidate = 3600,
@@ -397,12 +404,12 @@ export async function fetchCreatorsByUsernames(
 
   if (!supabaseUrl || !supabaseKey || cleaned.length === 0) return [];
 
-  const qp = new URLSearchParams();
-  qp.set('select', CARD_COLS);
-  qp.set('or', `(${cleaned.map((username) => `username.ilike.${username}`).join(',')})`);
-  qp.set('limit', String(cleaned.length));
+  const fetchRows = async (usernameFilter: string, limit: number): Promise<Creator[]> => {
+    const qp = new URLSearchParams();
+    qp.set('select', CARD_COLS);
+    qp.set('username', usernameFilter);
+    qp.set('limit', String(limit));
 
-  try {
     const response = await fetch(`${supabaseUrl}/rest/v1/onlyfans_profiles?${qp.toString()}`, {
       headers: {
         apikey: supabaseKey,
@@ -413,12 +420,48 @@ export async function fetchCreatorsByUsernames(
       next: { revalidate },
       signal: AbortSignal.timeout(10_000),
     });
-    if (!response.ok) return [];
+    if (!response.ok) {
+      throw new CreatorFetchError(await readErrorMessage(response), response.status);
+    }
     const rows: Record<string, unknown>[] = await response.json();
     return rows.map(mapCreator);
-  } catch {
-    return [];
+  };
+
+  const byUsername = new Map<string, Creator>();
+  const addCreators = (creators: Creator[]) => {
+    for (const creator of creators) {
+      const key = creator.username.toLowerCase();
+      if (!byUsername.has(key)) byUsername.set(key, creator);
+    }
+  };
+
+  // Profiles are normally stored lowercase, so try both spellings exactly.
+  const exactNames = Array.from(new Set(
+    cleaned.flatMap((username) => [username, username.toLowerCase()]),
+  ));
+  try {
+    addCreators(await fetchRows(
+      `in.(${exactNames.map((username) => `"${username}"`).join(',')})`,
+      exactNames.length,
+    ));
+  } catch (error) {
+    console.error('Sponsor lookup failed:', error instanceof Error ? error.message : error);
   }
+
+  const missing = cleaned.filter((username) => !byUsername.has(username.toLowerCase()));
+  const fallbackResults = await Promise.all(missing.map(async (username) => {
+    try {
+      // Escape `_` so it is not a LIKE wildcard; `.` and `-` are already literal.
+      const rows = await fetchRows(`ilike.${username.replace(/_/g, '\\_')}`, 2);
+      return rows.filter((creator) => creator.username.toLowerCase() === username.toLowerCase());
+    } catch (error) {
+      console.error(`Sponsor lookup failed for ${username}:`, error instanceof Error ? error.message : error);
+      return [];
+    }
+  }));
+  fallbackResults.forEach(addCreators);
+
+  return Array.from(byUsername.values());
 }
 
 function comparePopularCreators(a: Creator, b: Creator): number {
