@@ -130,31 +130,8 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
     ],
   },
   {
-    username: 'rinayanami',
-    position: 4,
-    scopes: ['sitewide'],
-    searchDropdown: true,
-    linkOverride: 'https://onlyfans.com/rinayanami/c31',
-    clickTable: 'sponsor_clicks_oaussief_rinayanami',
-    imageOverride: '/uploads/sponsors/rinayanami/rina-01.jpg',
-    tags: ['Petite', 'Asian', 'Nerdy', 'GFE'],
-    additionalTagCount: 5,
-    galleryImages: [
-      '/uploads/sponsors/rinayanami/rina-02.jpg',
-      '/uploads/sponsors/rinayanami/rina-03.jpg',
-      '/uploads/sponsors/rinayanami/rina-04.jpg',
-      '/uploads/sponsors/rinayanami/rina-05.jpg',
-      '/uploads/sponsors/rinayanami/rina-06.jpg',
-      '/uploads/sponsors/rinayanami/rina-07.jpg',
-      '/uploads/sponsors/rinayanami/rina-08.jpg',
-      '/uploads/sponsors/rinayanami/rina-09.jpg',
-      '/uploads/sponsors/rinayanami/rina-10.jpg',
-      '/uploads/sponsors/rinayanami/rina-11.jpg',
-    ],
-  },
-  {
     username: 'sophiescrts',
-    position: 5,
+    position: 4,
     scopes: ['sitewide'],
     searchDropdown: true,
     linkOverride: 'https://onlyfans.com/sophiescrts/c7',
@@ -292,8 +269,6 @@ export const GO_ALIASES: Record<string, string> = {
   // sophiescrts
   heyitsjudyy: 'sophiescrts',
   zoeycollins8x: 'sophiescrts',
-  // rinayanami
-  amelielou: 'rinayanami',
 };
 
 const NORMALIZED_ALIASES = new Map(
