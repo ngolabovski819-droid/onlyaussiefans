@@ -47,13 +47,49 @@ const CARD_COLS = [
   'promotion1_price', 'promotion1_discount',
 ].join(',');
 
+/**
+ * Names and locations arrive HTML-escaped from the OnlyFans scrape (7.7k profiles carry a
+ * literal "&amp;"), and React escapes again on render, so "Audrey & Sadie" reached the card
+ * as "Audrey &amp; Sadie". Decoding once here fixes every consumer — cards, alt text,
+ * aria-labels and page metadata — rather than at each render site.
+ *
+ * One pass, so an escaped entity like "&amp;lt;" decodes to "&lt;" and not to "<".
+ */
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+};
+
+function decodeEntities<T extends string | null>(value: T): T {
+  if (!value) return value;
+  return value.replace(/&(#x[0-9a-f]+|#d+|[a-z]+);/gi, (match, entity: string) => {
+    const key = entity.toLowerCase();
+    const codePoint = key.startsWith('#x')
+      ? Number.parseInt(entity.slice(2), 16)
+      : key.startsWith('#')
+        ? Number.parseInt(entity.slice(1), 10)
+        : null;
+    if (codePoint !== null) {
+      // Reject out-of-range or malformed references rather than throwing on fromCodePoint.
+      return Number.isInteger(codePoint) && codePoint >= 0 && codePoint <= 0x10ffff
+        ? String.fromCodePoint(codePoint)
+        : match;
+    }
+    return NAMED_ENTITIES[key] ?? match;
+  }) as T;
+}
+
 function mapCreator(raw: Record<string, unknown>): Creator {
   return {
     id: raw.id as number,
     username: raw.username as string,
-    name: (raw.name as string) ?? null,
+    name: decodeEntities((raw.name as string) ?? null),
     about: (raw.about as string) ?? null,
-    location: (raw.location as string) ?? null,
+    location: decodeEntities((raw.location as string) ?? null),
     avatar: (raw.avatar as string) ?? null,
     avatarC144: (raw.avatar_c144 as string) ?? null,
     header: (raw.header as string) ?? null,
