@@ -1380,6 +1380,47 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-left: 3px solid var(--accent);
 }
 
+/* ── Category intro (collapsible) ──────────────── */
+/* Lead inherits the page text colour; the remainder is muted. */
+.cat-intro {
+  max-width: 68ch;
+  margin-bottom: 2.25rem;
+  font-size: 1.125rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.cat-intro-rest { color: var(--text-muted); animation: cat-intro-in 0.3s ease both; }
+
+.cat-intro-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.95em;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.cat-intro-toggle:hover { color: var(--accent-pink); border-bottom-color: currentColor; }
+.cat-intro-toggle:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 3px; border-radius: 4px; }
+
+.cat-intro-chevron { transition: transform 0.2s ease; }
+.cat-intro-toggle[aria-expanded="true"] .cat-intro-chevron { transform: rotate(180deg); }
+
+@keyframes cat-intro-in { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-intro-rest { animation: none; }
+  .cat-intro-chevron { transition: none; }
+}
+
+@media (max-width: 480px) {
+  .cat-intro { font-size: 1rem; line-height: 1.6; }
+}
+
 /* ── FAQ ───────────────────────────────────────── */
 .faq-section { padding: 3rem 0; }
 .faq-heading { font-size: clamp(1.3rem, 2.5vw, 1.6rem); margin-bottom: 1.5rem; }

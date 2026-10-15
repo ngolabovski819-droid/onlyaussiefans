@@ -6,6 +6,7 @@ import { states } from '@/config/states';
 import { categoryScope, fetchSponsoredPage } from '@/config/featured';
 import CreatorGrid from '@/components/CreatorGrid';
 import RelatedLocations from '@/components/RelatedLocations';
+import CategoryIntro from '@/components/CategoryIntro';
 
 export const revalidate = 3600;
 
@@ -114,9 +115,9 @@ export default async function CategoryPage({ params }: Props) {
               Verified Australian {cat.label.toLowerCase()} creators
             </p>
           )}
-          <p className="location-intro">
-            {cat.intro ?? `Discover the top Australian ${cat.label} OnlyFans creators in our daily-updated directory. All profiles are verified Aussie creators searched by location and interests. Browse, filter and find your perfect Australian ${cat.label.toLowerCase()} creator below.`}
-          </p>
+          <CategoryIntro
+            text={cat.intro ?? `Discover the top Australian ${cat.label} OnlyFans creators in our daily-updated directory. All profiles are verified Aussie creators searched by location and interests. Browse, filter and find your perfect Australian ${cat.label.toLowerCase()} creator below.`}
+          />
         </div>
 
         <CreatorGrid

@@ -32,7 +32,7 @@ const SECTIONS: { heading: string; emoji: string; slugs: string[] }[] = [
   {
     heading: 'Most Popular',
     emoji: '🔥',
-    slugs: ['milf', 'bbw', 'teen', 'latina', 'asian', 'ebony', 'blonde', 'trans', 'lesbian', 'free', 'fitness', 'petite'],
+    slugs: ['milf', 'bbw', 'teen', 'latina', 'asian', 'ebony', 'blonde', 'trans', 'lesbian', 'free', 'fitness', 'petite', 'busty'],
   },
   {
     heading: 'By Appearance',
