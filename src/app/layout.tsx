@@ -2,8 +2,10 @@ import type { Metadata } from 'next';
 import { Inter, Syne } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
-import Nav from '@/components/Nav';
+import Nav, { type NavLocation } from '@/components/Nav';
 import Footer from '@/components/Footer';
+import { states } from '@/config/states';
+import { getCitiesByState } from '@/config/cities';
 import AgeGate from '@/components/AgeGate';
 import SponsoredLinkTokenizer from '@/components/SponsoredLinkTokenizer';
 
@@ -11,6 +13,15 @@ const GA_ID = 'G-4CL35KP78J';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const syne  = Syne({ subsets: ['latin'], variable: '--font-syne',  display: 'swap', weight: ['700', '800'] });
+
+// Slim state → cities tree for the header. Built server-side so the client
+// bundle doesn't carry every location's intro and FAQs.
+const navLocations: NavLocation[] = states.map((s) => ({
+  abbr: s.abbr,
+  label: s.label,
+  urlSlug: s.urlSlug,
+  cities: getCitiesByState(s.slug).map((c) => ({ label: c.label, urlSlug: c.urlSlug })),
+}));
 
 const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL  ?? 'https://onlyaussiefans.com';
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? 'OnlyAussieFans';
@@ -83,7 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SponsoredLinkTokenizer />
         <AgeGate />
-        <Nav />
+        <Nav locations={navLocations} />
         <main>{children}</main>
         <Footer />
         <GoogleAnalytics gaId={GA_ID} />

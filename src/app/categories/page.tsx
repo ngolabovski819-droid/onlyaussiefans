@@ -52,7 +52,7 @@ const SECTIONS: { heading: string; emoji: string; slugs: string[] }[] = [
   {
     heading: 'Gender & Identity',
     emoji: '🏳️‍🌈',
-    slugs: ['trans', 'lesbian', 'femboy', 'couples'],
+    slugs: ['guys', 'trans', 'lesbian', 'femboy', 'couples'],
   },
   {
     heading: 'Content Type',

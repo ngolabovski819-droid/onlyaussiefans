@@ -14,6 +14,12 @@ export interface CategoryConfig {
   /** Result ordering; defaults to 'popular'. */
   sort?: 'popular' | 'newest';
   emoji?: string;
+  /** Creators kept off this category's grid even though their profile
+   *  matches its terms (e.g. women whose bio mentions "tradie" on Guys). */
+  excludeUsernames?: string[];
+  /** Skip sitewide sponsor campaigns on this category's grid. Campaigns
+   *  scoped to the category itself still show. */
+  hideSitewideSponsors?: boolean;
   /** Surfaces in nav dropdown/chips, homepage "Popular Categories", and
    *  location×category cross-links. Leave unset for attribute-style pages
    *  (see below) whose label is already a full phrase — the generic
@@ -133,6 +139,27 @@ export const categories: CategoryConfig[] = [
   { slug: 'athletic', label: 'Athletic', terms: ['athletic', 'toned', 'fit body', 'sporty'] },
   { slug: 'curvy', label: 'Curvy', terms: ['curvy', 'hourglass', 'thick', 'voluptuous'] },
   { slug: 'femboy', label: 'Femboy', terms: ['femboy', 'femboi', 'crossdress', 'trap'] },
+  {
+    slug: 'guys',
+    label: 'Guys',
+    // No bare 'male'/'men': the search_text prefilter is a substring match, so
+    // 'male' pulls in every 'female' bio and crowds out real matches.
+    terms: ['aussie guy', 'aussie bloke', 'aussie boy', 'gay guy', 'gay boy', 'gay male', 'gay aussie', 'aussie gay', 'bi guy', 'bi male', 'straight guy', 'twink', 'tradie', 'jock', 'masc', 'dad bod'],
+    // Women whose bios match a term above ("tradie", "masc", "aussie boy").
+    excludeUsernames: ['wheneveryouwannagrind', 'xdaddybowserx', 'tradiebaby_xx', 'laurah19', 'annacreamdchoc'],
+    // Every sitewide sponsor is a woman, which reads wrong on a men's page.
+    hideSitewideSponsors: true,
+    h1: 'Best Aussie Guys on OnlyFans',
+    metaTitle: 'Aussie Male OnlyFans: Australian Guys & Gay Creators (2026) | OnlyAussieFans',
+    metaDesc: 'Browse the best Aussie male OnlyFans creators. Australian guys, gay and bi men, tradies, twinks and jocks, ranked by popularity and updated daily. Free and paid accounts.',
+    intro: "Looking for Aussie male OnlyFans creators? This page brings together the best Australian guys on OnlyFans, from gay and bi creators to straight blokes, tradies, twinks, jocks and dad bods. Every creator listed is Australian, so you're supporting local men from Sydney, Melbourne, Brisbane, Perth, the Gold Coast and the regions. We rank Aussie guys OnlyFans accounts by popularity and refresh the list daily, so the men getting the most attention right now sit at the top. Browse free and paid pages, compare subscription prices at a glance, and use the filters to narrow things down by price or verified status. If you're after something more specific, the femboy and couples categories are worth a look too.",
+    faqs: [
+      { q: 'Who is listed on the Aussie guys page?', a: 'Australian men on OnlyFans whose profile describes them as an Aussie guy or bloke, gay, bi or straight, a tradie, twink, jock and similar. Every creator here gives an Australian location.' },
+      { q: 'Are there gay Australian OnlyFans creators here?', a: 'Yes. Gay and bi Aussie guys make up a big part of this page. Use the search or a city page to find gay Australian OnlyFans creators near you.' },
+      { q: 'Are there free male OnlyFans accounts from Australia?', a: 'Yes. Use the Free price filter to show only Aussie male creators with a $0 subscription. Many earn through tips and pay-per-view messages instead.' },
+      { q: 'How is this page ranked?', a: 'By popularity, based on how many fans have favourited each creator. The ranking updates daily as profiles change.' },
+    ],
+  },
   { slug: 'joi', label: 'JOI', terms: ['joi', 'jerk off instruction'] },
   { slug: 'pov', label: 'POV', terms: ['pov', 'point of view'] },
   { slug: 'asmr', label: 'ASMR', terms: ['asmr', 'whisper', 'tingles'] },
@@ -147,7 +174,7 @@ export const popularCategories = categories.filter((c) => c.popular);
 export const categoryGroups: { label: string; items: CategoryConfig[] }[] = [
   {
     label: 'Gender & Identity',
-    items: categories.filter((c) => ['trans', 'lesbian', 'femboy', 'couples'].includes(c.slug)),
+    items: categories.filter((c) => ['guys', 'trans', 'lesbian', 'femboy', 'couples'].includes(c.slug)),
   },
   {
     label: 'Age',

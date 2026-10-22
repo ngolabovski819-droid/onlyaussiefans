@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { states } from '@/config/states';
+import { topCities } from '@/config/cities';
 import { popularCategories } from '@/config/categories';
 
 export default function Footer() {
@@ -34,6 +35,20 @@ export default function Footer() {
                 <li key={s.slug}>
                   <Link href={`/${s.urlSlug}/`} className="footer-link">
                     {s.label} ({s.abbr})
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cities */}
+          <div className="footer-col">
+            <h3 className="footer-heading">Top Cities</h3>
+            <ul className="footer-list">
+              {topCities.map((c) => (
+                <li key={c.slug}>
+                  <Link href={`/${c.urlSlug}/`} className="footer-link">
+                    {c.label} OnlyFans
                   </Link>
                 </li>
               ))}

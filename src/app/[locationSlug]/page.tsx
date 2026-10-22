@@ -7,6 +7,7 @@ import { popularCategories } from '@/config/categories';
 import { fetchSponsoredPage, locationScope } from '@/config/featured';
 import CreatorGrid from '@/components/CreatorGrid';
 import RelatedLocations from '@/components/RelatedLocations';
+import CategoryIntro from '@/components/CategoryIntro';
 
 export const revalidate = 3600;
 
@@ -70,13 +71,16 @@ export default async function LocationPage({ params }: Props) {
     })),
   };
 
+  // Find parent state for city pages
+  const parentState = city ? states.find(s => s.slug === city.parentState) : null;
+
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-      ...(city && state
-        ? [{ '@type': 'ListItem', position: 2, name: state.label, item: `${SITE_URL}/${state.urlSlug}` }]
+      ...(city && parentState
+        ? [{ '@type': 'ListItem', position: 2, name: parentState.label, item: `${SITE_URL}/${parentState.urlSlug}` }]
         : []),
       { '@type': 'ListItem', position: isState ? 2 : 3, name: loc.label, item: `${SITE_URL}/${locationSlug}` },
     ],
@@ -94,9 +98,6 @@ export default async function LocationPage({ params }: Props) {
       name: c.name ?? c.username,
     })),
   } : null;
-
-  // Find parent state for city pages
-  const parentState = city ? states.find(s => s.slug === city.parentState) : null;
 
   return (
     <>
@@ -131,7 +132,7 @@ export default async function LocationPage({ params }: Props) {
           <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
             Australian creators found in {loc.label}
           </p>
-          <p className="location-intro">{loc.intro}</p>
+          <CategoryIntro text={loc.intro} />
         </div>
 
         {/* Creator grid */}
@@ -145,20 +146,22 @@ export default async function LocationPage({ params }: Props) {
           scope={scope}
         />
 
-        {/* Browse by category */}
-        <section style={{ margin: '2.5rem 0 1.5rem' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-            Browse {loc.label} Creators by Category
-          </h2>
-          <div className="chips-row chips-row--wrap">
-            {popularCategories.map(c => (
-              <Link key={c.slug} href={`/${locationSlug}/${c.slug}/`} className="category-chip">
-                {c.emoji && <span>{c.emoji}</span>}
-                {c.label}
-              </Link>
-            ))}
-          </div>
-        </section>
+        {/* Browse by category — only where the combo pages exist */}
+        {(isState || city?.categoryPages) && (
+          <section style={{ margin: '2.5rem 0 1.5rem' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem' }}>
+              Browse {loc.label} Creators by Category
+            </h2>
+            <div className="chips-row chips-row--wrap">
+              {popularCategories.map(c => (
+                <Link key={c.slug} href={`/${locationSlug}/${c.slug}/`} className="category-chip">
+                  {c.emoji && <span>{c.emoji}</span>}
+                  {c.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Related locations */}
         {isState && state && (

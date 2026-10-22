@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { states } from '@/config/states';
 import { popularCategories } from '@/config/categories';
 import SearchHistoryDropdown from './SearchHistoryDropdown';
 import {
@@ -20,7 +19,15 @@ const NAV_LINKS = [
   { label: 'Free OnlyFans', href: '/categories/free/' },
 ];
 
-export default function Nav() {
+/** A state and its city pages, as listed in the States menu. */
+export interface NavLocation {
+  abbr: string;
+  label: string;
+  urlSlug: string;
+  cities: { label: string; urlSlug: string }[];
+}
+
+export default function Nav({ locations }: { locations: NavLocation[] }) {
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [statesOpen, setStatesOpen] = useState(false);
@@ -94,12 +101,23 @@ export default function Nav() {
               States ▾
             </button>
             {statesOpen && (
-              <div className="nav-dropdown nav-dropdown--right">
-                {states.map((s) => (
-                  <Link key={s.slug} href={`/${s.urlSlug}/`} className="nav-dropdown-item">
-                    <span className="nav-dropdown-abbr">{s.abbr}</span>
-                    {s.label}
-                  </Link>
+              <div className="nav-dropdown nav-dropdown--right nav-dropdown--locations">
+                {locations.map((s) => (
+                  <div key={s.urlSlug} className="nav-loc-group">
+                    <Link href={`/${s.urlSlug}/`} className="nav-dropdown-item nav-loc-state">
+                      <span className="nav-dropdown-abbr">{s.abbr}</span>
+                      {s.label}
+                    </Link>
+                    {s.cities.length > 0 && (
+                      <div className="nav-loc-cities">
+                        {s.cities.map((c) => (
+                          <Link key={c.urlSlug} href={`/${c.urlSlug}/`} className="nav-loc-city">
+                            {c.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
@@ -194,10 +212,21 @@ export default function Nav() {
             </Link>
           ))}
           <div className="nav-mobile-section">States</div>
-          {states.map((s) => (
-            <Link key={s.slug} href={`/${s.urlSlug}/`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
-              {s.abbr} — {s.label}
-            </Link>
+          {locations.map((s) => (
+            <div key={s.urlSlug}>
+              <Link href={`/${s.urlSlug}/`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
+                {s.abbr} — {s.label}
+              </Link>
+              {s.cities.length > 0 && (
+                <div className="nav-mobile-cities">
+                  {s.cities.map((c) => (
+                    <Link key={c.urlSlug} href={`/${c.urlSlug}/`} className="nav-mobile-city" onClick={() => setMobileOpen(false)}>
+                      {c.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
           <div className="nav-mobile-section">Categories</div>
           {popularCategories.map((c) => (

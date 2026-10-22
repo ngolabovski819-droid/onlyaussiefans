@@ -173,11 +173,13 @@ function isLikelyForeignLocation(location: string | null): boolean {
   const value = location.normalize('NFKC').toLocaleLowerCase();
 
   // An explicit Australian marker wins over a secondary travel/location label.
-  if (/\b(australia|australian|aussie)\b/u.test(value)) return false;
+  if (/\b(australia|australian|aussie)\b/u.test(value) || value.includes('🇦🇺')) return false;
 
   const withoutNewSouthWales = value.replace(/new south wales/gu, '');
   return (
-    /\b(usa|united states|united kingdom|england|scotland|canada|new zealand|ireland)\b/u.test(withoutNewSouthWales) ||
+    /\b(usa|united states|united kingdom|england|scotland|canada|new zealand|ireland|california)\b/u.test(withoutNewSouthWales) ||
+    value.includes('🇺🇸') ||
+    /\bcentral coast\s*,?\s*(ca|cali)\b/u.test(value) ||
     /\bnewcastle upon tyne\b/u.test(value) ||
     /\bnew brunswick\b/u.test(value) ||
     /\bpalmerston north\b/u.test(value) ||

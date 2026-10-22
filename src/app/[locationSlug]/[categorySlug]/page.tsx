@@ -44,7 +44,7 @@ export default async function LocationCategoryPage({ params }: Props) {
   const city  = !state ? getCityByUrlSlug(locationSlug) : null;
   const cat   = getCategoryBySlug(categorySlug);
 
-  if ((!state && !city) || !cat) notFound();
+  if ((!state && !city) || !cat || (city && !city.categoryPages)) notFound();
 
   const loc = (state ?? city)!;
   const scope = locationCategoryScope(locationSlug, categorySlug);

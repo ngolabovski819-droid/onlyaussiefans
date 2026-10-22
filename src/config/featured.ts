@@ -6,11 +6,20 @@ import {
   type SearchResult,
 } from '@/lib/supabase';
 import { getSponsorCampaignsForScope } from './sponsors';
+import { getCategoryBySlug } from './categories';
 
 export const categoryScope = (slug: string) => `category:${slug}`;
 export const locationScope = (slug: string) => `location:${slug}`;
 export const locationCategoryScope = (locationSlug: string, categorySlug: string) =>
   `location-category:${locationSlug}:${categorySlug}`;
+
+/** The category behind a `category:` or `location-category:` scope. Its grid
+ *  rules are applied here because every grid page, including Load More,
+ *  comes through fetchSponsoredPage with its scope. */
+function scopeCategory(scope: string) {
+  const slug = scope.match(/^(?:category|location-category:[a-z0-9-]+):([a-z0-9-]+)$/u)?.[1];
+  return slug ? getCategoryBySlug(slug) : undefined;
+}
 
 /**
  * Fetch a one-based page and merge paid placements into exact global slots.
@@ -23,9 +32,14 @@ export async function fetchSponsoredPage(
   page: number,
   pageSize: number,
 ): Promise<SearchResult> {
-  const configuredCampaigns = getSponsorCampaignsForScope(scope);
+  const category = scopeCategory(scope);
+  const base: SearchParams = category?.excludeUsernames?.length
+    ? { ...baseParams, excludeUsernames: [...(baseParams.excludeUsernames ?? []), ...category.excludeUsernames] }
+    : baseParams;
+
+  const configuredCampaigns = getSponsorCampaignsForScope(scope, !category?.hideSitewideSponsors);
   if (configuredCampaigns.length === 0) {
-    return fetchCreators({ ...baseParams, page, pageSize });
+    return fetchCreators({ ...base, page, pageSize });
   }
 
   // Resolve every configured sponsor first. Missing profiles are removed from
@@ -41,7 +55,7 @@ export async function fetchSponsoredPage(
   );
 
   if (campaigns.length === 0) {
-    return fetchCreators({ ...baseParams, page, pageSize });
+    return fetchCreators({ ...base, page, pageSize });
   }
 
   const windowStart = (page - 1) * pageSize;
@@ -60,11 +74,11 @@ export async function fetchSponsoredPage(
   // Fetch a full page rather than only the expected free slots. This provides
   // a natural fallback and an accurate has-more signal if a pin disappears.
   const naturalResult = await fetchCreators({
-    ...baseParams,
+    ...base,
     page: 1,
     pageSize,
     offset: naturalOffset,
-    excludeUsernames: sponsorUsernames,
+    excludeUsernames: [...(base.excludeUsernames ?? []), ...sponsorUsernames],
   });
   const excluded = new Set(sponsorUsernames.map((username) => username.toLowerCase()));
   const natural = naturalResult.creators.filter(

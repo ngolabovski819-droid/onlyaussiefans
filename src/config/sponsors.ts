@@ -266,7 +266,53 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
       '/uploads/sponsors/zoeprvx/zoe-19.jpg',
       '/uploads/sponsors/zoeprvx/zoe-20.jpg',
     ],
-  },];
+  },
+  {
+    username: 'lucierain',
+    position: 12,
+    scopes: ['sitewide'],
+    searchDropdown: true,
+    linkOverride: 'https://onlyfans.com/lucierain/c49',
+    clickTable: 'sponsor_clicks_oaussief_lucierain',
+    imageOverride: '/uploads/sponsors/lucierain/lucie-01.jpg',
+    tags: ['Fetish friendly', '18 y/o'],
+    additionalTagCount: 8,
+    galleryImages: [
+      '/uploads/sponsors/lucierain/lucie-02.jpg',
+      '/uploads/sponsors/lucierain/lucie-03.jpg',
+      '/uploads/sponsors/lucierain/lucie-04.jpg',
+      '/uploads/sponsors/lucierain/lucie-05.jpg',
+    ],
+  },
+  {
+    username: 'eviecarrol',
+    position: 14,
+    scopes: ['sitewide'],
+    searchDropdown: true,
+    linkOverride: 'https://onlyfans.com/eviecarrol/c141',
+    clickTable: 'sponsor_clicks_oaussief_eviecarrol',
+    imageOverride: '/uploads/sponsors/eviecarrol/evie-01.jpg',
+    tags: ['18 y/o', 'Petite', 'Blonde'],
+    additionalTagCount: 6,
+    galleryImages: [
+      '/uploads/sponsors/eviecarrol/evie-02.jpg',
+    ],
+  },
+  {
+    username: 'amymyohmy',
+    position: 16,
+    scopes: ['sitewide'],
+    searchDropdown: true,
+    linkOverride: 'https://onlyfans.com/amymyohmy/c206',
+    clickTable: 'sponsor_clicks_oaussief_amymyohmy',
+    imageOverride: '/uploads/sponsors/amymyohmy/amy-01.jpg',
+    tags: ['18 y/o', 'Student'],
+    additionalTagCount: 7,
+    galleryImages: [
+      '/uploads/sponsors/amymyohmy/amy-02.jpg',
+    ],
+  },
+];
 
 const NORMALIZED = new Map(
   SPONSOR_CAMPAIGNS.map((campaign) => [campaign.username.trim().toLowerCase(), campaign]),
@@ -281,13 +327,14 @@ export function getSponsorCampaign(username: string): SponsorCampaign | undefine
   return NORMALIZED.get(username.trim().toLowerCase());
 }
 
-/** Ordered, deduplicated campaigns that belong in a creator-grid scope. */
-export function getSponsorCampaignsForScope(scope: string): SponsorCampaign[] {
+/** Ordered, deduplicated campaigns that belong in a creator-grid scope.
+ *  `includeSitewide: false` keeps only campaigns that name the scope. */
+export function getSponsorCampaignsForScope(scope: string, includeSitewide = true): SponsorCampaign[] {
   const seenUsers = new Set<string>();
   const seenPositions = new Set<number>();
 
   return SPONSOR_CAMPAIGNS
-    .filter((campaign) => isSitewide(campaign) || campaign.scopes?.includes(scope as SponsorScope))
+    .filter((campaign) => (includeSitewide && isSitewide(campaign)) || campaign.scopes?.includes(scope as SponsorScope))
     .filter((campaign) => campaign.username.trim() && Number.isInteger(campaign.position) && campaign.position > 0)
     .slice()
     .sort((a, b) => a.position - b.position)

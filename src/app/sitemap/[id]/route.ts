@@ -56,7 +56,7 @@ export async function GET(_req: Request, { params }: Params) {
         comboUrls.push(url(`/${s.urlSlug}/${cs}`, 0.7, 'weekly'));
       }
     }
-    for (const c of cities) {
+    for (const c of cities.filter(c => c.categoryPages)) {
       for (const cs of popularCatSlugs) {
         comboUrls.push(url(`/${c.urlSlug}/${cs}`, 0.6, 'weekly'));
       }

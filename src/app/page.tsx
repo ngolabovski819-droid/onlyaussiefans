@@ -67,7 +67,9 @@ const POPULAR_SEARCHES = [
   { label: 'Australian OnlyFans Models', href: '/categories/model/' },
   { label: 'Australian OnlyFans MILFs', href: '/categories/milf/' },
   { label: 'Cairns OnlyFans', href: '/cairns-onlyfans/' },
+  { label: 'Townsville OnlyFans', href: '/townsville-onlyfans/' },
   { label: 'Queensland OnlyFans', href: '/queensland-onlyfans/' },
+  { label: 'Aussie Male OnlyFans', href: '/categories/guys/' },
   { label: 'Aussie OnlyFans Fitness Models', href: '/categories/fitness/' },
   { label: 'Under $10 Aussie OnlyFans', href: '/categories/under-10-aussie-onlyfans/' },
 ];
