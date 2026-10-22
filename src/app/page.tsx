@@ -148,7 +148,7 @@ export default async function HomePage() {
         <h2 className="section-heading">Browse by Australian State</h2>
         <div className="chips-row chips-row--wrap">
           {states.map(s => (
-            <Link key={s.slug} href={`/${s.urlSlug}/`} className="location-chip location-chip--state">
+            <Link key={s.slug} href={`/${s.urlSlug}`} className="location-chip location-chip--state">
               {s.abbr} — {s.label}
             </Link>
           ))}
@@ -163,7 +163,7 @@ export default async function HomePage() {
         <h2 className="section-heading">Popular Australian OnlyFans Cities</h2>
         <div className="chips-row chips-row--wrap">
           {cities.map(c => (
-            <Link key={c.urlSlug} href={`/${c.urlSlug}/`} className="location-chip">
+            <Link key={c.urlSlug} href={`/${c.urlSlug}`} className="location-chip">
               {c.label} OnlyFans
             </Link>
           ))}
@@ -236,7 +236,7 @@ export default async function HomePage() {
         <h2 className="section-heading">Popular Categories</h2>
         <div className="chips-row chips-row--wrap" style={{ justifyContent: 'center' }}>
           {popularCategories.slice(0, 16).map(c => (
-            <Link key={c.slug} href={`/categories/${c.slug}/`} className="category-chip">
+            <Link key={c.slug} href={`/categories/${c.slug}`} className="category-chip">
               {c.emoji && <span>{c.emoji}</span>}
               {c.label}
             </Link>

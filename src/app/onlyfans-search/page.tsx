@@ -46,7 +46,7 @@ export default async function OnlyFansSearchPage() {
         <h2 className="section-heading">Browse by State</h2>
         <div className="chips-row chips-row--wrap">
           {states.map(s => (
-            <Link key={s.slug} href={`/${s.urlSlug}/`} className="location-chip location-chip--state">
+            <Link key={s.slug} href={`/${s.urlSlug}`} className="location-chip location-chip--state">
               <strong style={{ color: 'var(--accent-light)', marginRight: 4 }}>{s.abbr}</strong>
               {s.label}
             </Link>
@@ -58,7 +58,7 @@ export default async function OnlyFansSearchPage() {
         <h2 className="section-heading">Popular Categories</h2>
         <div className="chips-row chips-row--wrap">
           {popularCategories.map(c => (
-            <Link key={c.slug} href={`/categories/${c.slug}/`} className="category-chip">
+            <Link key={c.slug} href={`/categories/${c.slug}`} className="category-chip">
               {c.emoji && <span>{c.emoji}</span>}
               {c.label}
             </Link>

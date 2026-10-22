@@ -80,7 +80,7 @@ export default async function LocationCategoryPage({ params }: Props) {
         <nav className="breadcrumb" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span className="breadcrumb-sep">›</span>
-          <Link href={`/${locationSlug}/`}>{loc.label}</Link>
+          <Link href={`/${locationSlug}`}>{loc.label}</Link>
           <span className="breadcrumb-sep">›</span>
           <span className="breadcrumb-current">{cat.label}</span>
         </nav>
@@ -120,7 +120,7 @@ export default async function LocationCategoryPage({ params }: Props) {
               .filter(c => c.slug !== categorySlug)
               .slice(0, 12)
               .map(c => (
-                <Link key={c.slug} href={`/${locationSlug}/${c.slug}/`} className="category-chip">
+                <Link key={c.slug} href={`/${locationSlug}/${c.slug}`} className="category-chip">
                   {c.emoji && <span>{c.emoji}</span>}
                   {c.label}
                 </Link>
@@ -137,7 +137,7 @@ export default async function LocationCategoryPage({ params }: Props) {
             {states
               .filter(s => s.urlSlug !== locationSlug)
               .map(s => (
-                <Link key={s.slug} href={`/${s.urlSlug}/${categorySlug}/`} className="location-chip">
+                <Link key={s.slug} href={`/${s.urlSlug}/${categorySlug}`} className="location-chip">
                   {s.abbr} {cat.label}
                 </Link>
               ))}

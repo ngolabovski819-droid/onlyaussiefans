@@ -11,7 +11,7 @@ export default function CategoryBrowse() {
             <h3 className="category-group-label">{group.label}</h3>
             <div className="chips-row chips-row--wrap">
               {group.items.map((cat) => (
-                <Link key={cat.slug} href={`/categories/${cat.slug}/`} className="category-chip">
+                <Link key={cat.slug} href={`/categories/${cat.slug}`} className="category-chip">
                   {cat.emoji && <span>{cat.emoji} </span>}
                   {cat.label}
                 </Link>
@@ -21,7 +21,7 @@ export default function CategoryBrowse() {
         ))}
       </div>
       <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <Link href="/categories/" className="btn btn--outline">
+        <Link href="/categories" className="btn btn--outline">
           View All Categories →
         </Link>
       </div>

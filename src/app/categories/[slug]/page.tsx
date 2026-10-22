@@ -161,7 +161,7 @@ export default async function CategoryPage({ params }: Props) {
           </h2>
           <div className="chips-row chips-row--wrap">
             {states.map(s => (
-              <Link key={s.slug} href={`/${s.urlSlug}/${slug}/`} className="location-chip">
+              <Link key={s.slug} href={`/${s.urlSlug}/${slug}`} className="location-chip">
                 {s.abbr} {cat.label}
               </Link>
             ))}

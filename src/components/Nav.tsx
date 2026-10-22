@@ -104,14 +104,14 @@ export default function Nav({ locations }: { locations: NavLocation[] }) {
               <div className="nav-dropdown nav-dropdown--right nav-dropdown--locations">
                 {locations.map((s) => (
                   <div key={s.urlSlug} className="nav-loc-group">
-                    <Link href={`/${s.urlSlug}/`} className="nav-dropdown-item nav-loc-state">
+                    <Link href={`/${s.urlSlug}`} className="nav-dropdown-item nav-loc-state">
                       <span className="nav-dropdown-abbr">{s.abbr}</span>
                       {s.label}
                     </Link>
                     {s.cities.length > 0 && (
                       <div className="nav-loc-cities">
                         {s.cities.map((c) => (
-                          <Link key={c.urlSlug} href={`/${c.urlSlug}/`} className="nav-loc-city">
+                          <Link key={c.urlSlug} href={`/${c.urlSlug}`} className="nav-loc-city">
                             {c.label}
                           </Link>
                         ))}
@@ -135,12 +135,12 @@ export default function Nav({ locations }: { locations: NavLocation[] }) {
             {catsOpen && (
               <div className="nav-dropdown nav-dropdown--wide nav-dropdown--right">
                 {popularCategories.map((c) => (
-                  <Link key={c.slug} href={`/categories/${c.slug}/`} className="nav-dropdown-item">
+                  <Link key={c.slug} href={`/categories/${c.slug}`} className="nav-dropdown-item">
                     {c.emoji && <span>{c.emoji} </span>}
                     {c.label}
                   </Link>
                 ))}
-                <Link href="/categories/" className="nav-dropdown-item nav-dropdown-item--all">
+                <Link href="/categories" className="nav-dropdown-item nav-dropdown-item--all">
                   View All Categories →
                 </Link>
               </div>
@@ -214,13 +214,13 @@ export default function Nav({ locations }: { locations: NavLocation[] }) {
           <div className="nav-mobile-section">States</div>
           {locations.map((s) => (
             <div key={s.urlSlug}>
-              <Link href={`/${s.urlSlug}/`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
+              <Link href={`/${s.urlSlug}`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
                 {s.abbr} — {s.label}
               </Link>
               {s.cities.length > 0 && (
                 <div className="nav-mobile-cities">
                   {s.cities.map((c) => (
-                    <Link key={c.urlSlug} href={`/${c.urlSlug}/`} className="nav-mobile-city" onClick={() => setMobileOpen(false)}>
+                    <Link key={c.urlSlug} href={`/${c.urlSlug}`} className="nav-mobile-city" onClick={() => setMobileOpen(false)}>
                       {c.label}
                     </Link>
                   ))}
@@ -230,7 +230,7 @@ export default function Nav({ locations }: { locations: NavLocation[] }) {
           ))}
           <div className="nav-mobile-section">Categories</div>
           {popularCategories.map((c) => (
-            <Link key={c.slug} href={`/categories/${c.slug}/`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
+            <Link key={c.slug} href={`/categories/${c.slug}`} className="nav-mobile-link" onClick={() => setMobileOpen(false)}>
               {c.emoji} {c.label}
             </Link>
           ))}

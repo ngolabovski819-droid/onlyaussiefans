@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: Props) {
         <nav className="breadcrumb" style={{ marginBottom: '1.5rem' }} aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <span className="breadcrumb-sep">›</span>
-          <Link href="/blog/">Blog</Link>
+          <Link href="/blog">Blog</Link>
           <span className="breadcrumb-sep">›</span>
           <span className="breadcrumb-current">{post.title}</span>
         </nav>
@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: Props) {
         />
 
         <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--border-subtle)' }}>
-          <Link href="/blog/" style={{ color: 'var(--accent-light)', fontWeight: 600 }}>← Back to Blog</Link>
+          <Link href="/blog" style={{ color: 'var(--accent-light)', fontWeight: 600 }}>← Back to Blog</Link>
         </div>
       </article>
     </>

@@ -114,7 +114,7 @@ export default async function LocationPage({ params }: Props) {
           <span className="breadcrumb-sep">›</span>
           {city && parentState && (
             <>
-              <Link href={`/${parentState.urlSlug}/`}>{parentState.label}</Link>
+              <Link href={`/${parentState.urlSlug}`}>{parentState.label}</Link>
               <span className="breadcrumb-sep">›</span>
             </>
           )}
@@ -154,7 +154,7 @@ export default async function LocationPage({ params }: Props) {
             </h2>
             <div className="chips-row chips-row--wrap">
               {popularCategories.map(c => (
-                <Link key={c.slug} href={`/${locationSlug}/${c.slug}/`} className="category-chip">
+                <Link key={c.slug} href={`/${locationSlug}/${c.slug}`} className="category-chip">
                   {c.emoji && <span>{c.emoji}</span>}
                   {c.label}
                 </Link>
@@ -206,7 +206,7 @@ export default async function LocationPage({ params }: Props) {
               {getCitiesByState(city.parentState)
                 .filter(c => c.slug !== city.slug)
                 .map(c => (
-                  <Link key={c.slug} href={`/${c.urlSlug}/`} className="location-chip">{c.label} OnlyFans</Link>
+                  <Link key={c.slug} href={`/${c.urlSlug}`} className="location-chip">{c.label} OnlyFans</Link>
                 ))}
             </div>
           </section>

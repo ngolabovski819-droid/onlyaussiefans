@@ -9,7 +9,7 @@ export default function NotFound() {
       <p>This creator or page doesn&apos;t exist. Try browsing by state:</p>
       <div className="not-found-states">
         {states.map(s => (
-          <Link key={s.slug} href={`/${s.urlSlug}/`} className="location-chip location-chip--state">
+          <Link key={s.slug} href={`/${s.urlSlug}`} className="location-chip location-chip--state">
             {s.label}
           </Link>
         ))}

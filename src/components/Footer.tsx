@@ -33,7 +33,7 @@ export default function Footer() {
             <ul className="footer-list">
               {states.map((s) => (
                 <li key={s.slug}>
-                  <Link href={`/${s.urlSlug}/`} className="footer-link">
+                  <Link href={`/${s.urlSlug}`} className="footer-link">
                     {s.label} ({s.abbr})
                   </Link>
                 </li>
@@ -47,7 +47,7 @@ export default function Footer() {
             <ul className="footer-list">
               {topCities.map((c) => (
                 <li key={c.slug}>
-                  <Link href={`/${c.urlSlug}/`} className="footer-link">
+                  <Link href={`/${c.urlSlug}`} className="footer-link">
                     {c.label} OnlyFans
                   </Link>
                 </li>
@@ -61,13 +61,13 @@ export default function Footer() {
             <ul className="footer-list">
               {popularCategories.slice(0, 8).map((c) => (
                 <li key={c.slug}>
-                  <Link href={`/categories/${c.slug}/`} className="footer-link">
+                  <Link href={`/categories/${c.slug}`} className="footer-link">
                     {c.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/categories/" className="footer-link">All Categories →</Link>
+                <Link href="/categories" className="footer-link">All Categories →</Link>
               </li>
             </ul>
           </div>
@@ -76,12 +76,12 @@ export default function Footer() {
           <div className="footer-col">
             <h3 className="footer-heading">Information</h3>
             <ul className="footer-list">
-              <li><Link href="/categories/best-aussie-onlyfans/" className="footer-link">Best Aussie OnlyFans</Link></li>
-              <li><Link href="/categories/free/" className="footer-link">Free Australian OnlyFans</Link></li>
+              <li><Link href="/categories/best-aussie-onlyfans" className="footer-link">Best Aussie OnlyFans</Link></li>
+              <li><Link href="/categories/free" className="footer-link">Free Australian OnlyFans</Link></li>
               <li><Link href="/about" className="footer-link">About Us</Link></li>
               <li><Link href="/blog" className="footer-link">Blog</Link></li>
               <li><Link href="/search" className="footer-link">Search Creators</Link></li>
-              <li><Link href="/promote/" className="footer-link">Promote Your Page</Link></li>
+              <li><Link href="/promote" className="footer-link">Promote Your Page</Link></li>
             </ul>
             <h3 className="footer-heading" style={{ marginTop: '1rem' }}>Legal</h3>
             <ul className="footer-list">
