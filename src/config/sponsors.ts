@@ -39,6 +39,8 @@ export interface SponsorCampaign {
   scopes?: SponsorScope[];
   /** Override whether this campaign appears in focused search boxes. */
   searchDropdown?: boolean;
+  /** One-based search-dropdown slot, independent of the creator-grid position. */
+  searchPosition?: number;
   /** Custom outbound referral/tracking URL. */
   linkOverride?: string;
   /** Per-campaign Supabase click table written by /go/[username]. */
@@ -312,6 +314,123 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
       '/uploads/sponsors/amymyohmy/amy-02.jpg',
     ],
   },
+  {
+    username: 'emillyybrown',
+    position: 13,
+    scopes: ['sitewide'],
+    searchDropdown: false,
+    linkOverride: 'https://onlyfans.com/emillyybrown/c510',
+    clickTable: 'sponsor_clicks_oaussief_emillyybrown',
+    imageOverride: '/uploads/sponsors/emillyybrown/emily-01.jpg',
+    tags: ['18 y/o', 'Art student', 'New to OF'],
+    additionalTagCount: 4,
+    galleryImages: [
+      '/uploads/sponsors/emillyybrown/emily-02.jpg',
+      '/uploads/sponsors/emillyybrown/emily-03.jpg',
+      '/uploads/sponsors/emillyybrown/emily-04.jpg',
+      '/uploads/sponsors/emillyybrown/emily-05.jpg',
+      '/uploads/sponsors/emillyybrown/emily-06.jpg',
+      '/uploads/sponsors/emillyybrown/emily-07.jpg',
+      '/uploads/sponsors/emillyybrown/emily-08.jpg',
+      '/uploads/sponsors/emillyybrown/emily-09.jpg',
+      '/uploads/sponsors/emillyybrown/emily-10.jpg',
+      '/uploads/sponsors/emillyybrown/emily-11.jpg',
+    ],
+  },
+  {
+    username: 'lillyylou',
+    position: 18,
+    scopes: ['sitewide'],
+    searchDropdown: false,
+    linkOverride: 'https://onlyfans.com/lillyylou/c385',
+    clickTable: 'sponsor_clicks_oaussief_lillyylou',
+    imageOverride: '/uploads/sponsors/lillyylou/lilly-01.jpg',
+    tags: ['Fetish friendly', '18 y/o', 'New to OF'],
+    additionalTagCount: 8,
+    galleryImages: [
+      '/uploads/sponsors/lillyylou/lilly-02.jpg',
+      '/uploads/sponsors/lillyylou/lilly-03.jpg',
+      '/uploads/sponsors/lillyylou/lilly-04.jpg',
+      '/uploads/sponsors/lillyylou/lilly-05.jpg',
+      '/uploads/sponsors/lillyylou/lilly-06.jpg',
+      '/uploads/sponsors/lillyylou/lilly-07.jpg',
+    ],
+  },
+  {
+    username: 'itsgiastar',
+    position: 19,
+    scopes: ['sitewide'],
+    searchDropdown: true,
+    searchPosition: 2,
+    linkOverride: 'https://onlyfans.com/itsgiastar/c1',
+    clickTable: 'sponsor_clicks_oaussief_itsgiastar',
+    imageOverride: '/uploads/sponsors/itsgiastar/gia-01.jpg',
+    tags: ['Femdom', 'Fetish-friendly'],
+    additionalTagCount: 9,
+    galleryImages: [
+      '/uploads/sponsors/itsgiastar/gia-02.jpg',
+      '/uploads/sponsors/itsgiastar/gia-03.jpg',
+      '/uploads/sponsors/itsgiastar/gia-04.jpg',
+      '/uploads/sponsors/itsgiastar/gia-05.jpg',
+      '/uploads/sponsors/itsgiastar/gia-06.jpg',
+      '/uploads/sponsors/itsgiastar/gia-07.jpg',
+      '/uploads/sponsors/itsgiastar/gia-08.jpg',
+      '/uploads/sponsors/itsgiastar/gia-09.jpg',
+      '/uploads/sponsors/itsgiastar/gia-10.jpg',
+      '/uploads/sponsors/itsgiastar/gia-11.jpg',
+      '/uploads/sponsors/itsgiastar/gia-12.jpg',
+    ],
+  },
+  {
+    username: 'aprilcollinsss',
+    position: 20,
+    scopes: ['sitewide'],
+    searchDropdown: false,
+    linkOverride: 'https://onlyfans.com/aprilcollinsss/c75',
+    clickTable: 'sponsor_clicks_oaussief_aprilcollinsss',
+    imageOverride: '/uploads/sponsors/aprilcollinsss/april-01.jpg',
+    tags: ['Goon', 'Blonde', '19 y/o'],
+    additionalTagCount: 4,
+    galleryImages: [
+      '/uploads/sponsors/aprilcollinsss/april-02.jpg',
+      '/uploads/sponsors/aprilcollinsss/april-03.jpg',
+      '/uploads/sponsors/aprilcollinsss/april-04.jpg',
+    ],
+  },
+  {
+    username: 'ellaajanee',
+    position: 22,
+    scopes: ['sitewide'],
+    searchDropdown: false,
+    linkOverride: 'https://onlyfans.com/ellaajanee/c320',
+    clickTable: 'sponsor_clicks_oaussief_ellaajanee',
+    imageOverride: '/uploads/sponsors/ellaajanee/ella-01.jpg',
+    tags: ['Platinum blonde', 'Big tits', '18 y/o'],
+    additionalTagCount: 5,
+    galleryImages: [
+      '/uploads/sponsors/ellaajanee/ella-02.jpg',
+      '/uploads/sponsors/ellaajanee/ella-03.jpg',
+      '/uploads/sponsors/ellaajanee/ella-04.jpg',
+    ],
+  },
+  {
+    username: 'gracieharper',
+    position: 24,
+    scopes: ['sitewide'],
+    searchDropdown: false,
+    linkOverride: 'https://onlyfans.com/gracieharper/c415',
+    clickTable: 'sponsor_clicks_oaussief_gracieharper',
+    imageOverride: '/uploads/sponsors/gracieharper/gracie-01.jpg',
+    tags: ['Culinary student', 'Big tits', 'Blonde'],
+    additionalTagCount: 5,
+    galleryImages: [
+      '/uploads/sponsors/gracieharper/gracie-02.jpg',
+      '/uploads/sponsors/gracieharper/gracie-03.jpg',
+      '/uploads/sponsors/gracieharper/gracie-04.jpg',
+      '/uploads/sponsors/gracieharper/gracie-05.jpg',
+      '/uploads/sponsors/gracieharper/gracie-06.jpg',
+    ],
+  },
 ];
 
 const NORMALIZED = new Map(
@@ -350,7 +469,7 @@ export function getSponsorCampaignsForScope(scope: string, includeSitewide = tru
 /** Search placements derive from the same campaign list as grid placements. */
 export function getSearchSponsorCampaigns(): SponsorCampaign[] {
   const seen = new Set<string>();
-  return SPONSOR_CAMPAIGNS
+  const campaigns = SPONSOR_CAMPAIGNS
     .filter((campaign) => campaign.searchDropdown ?? isSitewide(campaign))
     .slice()
     .sort((a, b) => a.position - b.position)
@@ -360,6 +479,20 @@ export function getSearchSponsorCampaigns(): SponsorCampaign[] {
       seen.add(username);
       return true;
     });
+
+  // Reserve explicit dropdown slots without changing the grid or the relative
+  // order of existing search sponsors. Slots beyond the list append at the end.
+  const pinned = campaigns
+    .filter((campaign): campaign is SponsorCampaign & { searchPosition: number } => (
+      Number.isInteger(campaign.searchPosition) && (campaign.searchPosition ?? 0) > 0
+    ))
+    .sort((a, b) => a.searchPosition - b.searchPosition);
+  const pinnedUsernames = new Set(pinned.map((campaign) => campaign.username));
+  const ordered = campaigns.filter((campaign) => !pinnedUsernames.has(campaign.username));
+  for (const campaign of pinned) {
+    ordered.splice(Math.min(campaign.searchPosition - 1, ordered.length), 0, campaign);
+  }
+  return ordered;
 }
 
 export function isSponsorScope(value: string): boolean {

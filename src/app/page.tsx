@@ -43,16 +43,17 @@ async function TrendingCreators() {
     'home',
     { sort: 'popular', revalidate: 300, locationTerms: AU_TERMS },
     1,
-    20,
+    24,
   );
   return (
     <CreatorGrid
       initialCreators={creators}
       initialTotal={total}
       initialHasMore={hasMore}
+      pageSize={24}
       locationTerms={AU_TERMS}
       scope="home"
-      />
+    />
   );
 }
 
