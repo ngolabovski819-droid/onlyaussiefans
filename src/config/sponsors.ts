@@ -501,6 +501,9 @@ export const GO_ALIASES: Record<string, string> = {
   // sophiescrts
   heyitsjudyy: 'sophiescrts',
   zoeycollins8x: 'sophiescrts',
+  // ellaajanee — repointed from rocketreynaxo when her campaign ended
+  bigbootyjudy20: 'ellaajanee',
+  shaycrazychic: 'ellaajanee',
 };
 
 const NORMALIZED_ALIASES = new Map(
