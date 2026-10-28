@@ -53,6 +53,8 @@ export interface SponsorCampaign {
   additionalTagCount?: number;
   /** Additional carousel images under public/ or absolute URLs. */
   galleryImages?: string[];
+  /** Scratch-to-reveal word fans DM the creator for a welcome gift; replaces the card's View Profile button. */
+  secretWord?: string;
 }
 
 export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
@@ -84,6 +86,7 @@ export const SPONSOR_CAMPAIGNS: readonly SponsorCampaign[] = [
       '/uploads/sponsors/vietnami/nami-02.jpg',
       '/uploads/sponsors/vietnami/nami-03.jpg',
     ],
+    secretWord: 'TEASE',
   },
   {
     username: 'emilylopz',

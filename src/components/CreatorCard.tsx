@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { Creator } from '@/types/creator';
 import { buildSrcset } from '@/lib/image';
 import { getSponsorCampaign } from '@/config/sponsors';
+import SecretWordReveal from './SecretWordReveal';
 
 interface Props {
   creator: Creator;
@@ -80,8 +81,29 @@ export default function CreatorCard({ creator, index, placementScope }: Props) {
     ? `/go/${encodeURIComponent(creator.username)}${placementScope ? `?placement=${encodeURIComponent(placementScope)}` : ''}`
     : `https://onlyfans.com/${encodeURIComponent(creator.username)}`;
 
+  const details = (
+    <>
+      <h3 className="creator-name">{creator.name ?? creator.username}</h3>
+      <div className="creator-username-row">
+        <p className="creator-username">@{creator.username}</p>
+        {creator.isVerified && (
+          <span className="creator-verified-badge" title="Verified creator" aria-label="Verified creator">✓</span>
+        )}
+      </div>
+      {creator.location && <p className="creator-location">📍 {creator.location}</p>}
+      <div className="creator-price-row">
+        <span className={`creator-price ${isFree ? 'creator-price--free' : ''}`}>
+          {price}
+        </span>
+        {bundle && <span className="creator-bundle">{bundle}</span>}
+      </div>
+    </>
+  );
+
   return (
-    <article className={`creator-card${creator.sponsored ? ' creator-card--sponsored' : ''}`}>
+    <article
+      className={`creator-card${creator.sponsored ? ' creator-card--sponsored' : ''}${campaign?.secretWord ? ' creator-card--secret-word' : ''}`}
+    >
       <a
         href={profileHref}
         target="_blank"
@@ -157,30 +179,31 @@ export default function CreatorCard({ creator, index, placementScope }: Props) {
           </div>
         )}
         {creator.sponsored && (
-          <span className="creator-sponsored-label" title="Paid placement" aria-label="Advertisement">
-            Ad
+          <span className="creator-online-badge">
+            <span className="creator-online-dot" aria-hidden="true" />
+            Online now
           </span>
         )}
       </div>
 
       <div className="creator-card-body">
-        <h3 className="creator-name">{creator.name ?? creator.username}</h3>
-        <div className="creator-username-row">
-          <p className="creator-username">@{creator.username}</p>
-          {creator.isVerified && (
-            <span className="creator-verified-badge" title="Verified creator" aria-label="Verified creator">✓</span>
-          )}
-        </div>
-        {creator.location && <p className="creator-location">📍 {creator.location}</p>}
-        <div className="creator-price-row">
-          <span className={`creator-price ${isFree ? 'creator-price--free' : ''}`}>
-            {price}
-          </span>
-          {bundle && <span className="creator-bundle">{bundle}</span>}
-        </div>
-        <span className="creator-view-btn" aria-hidden="true">
-          View Profile
-        </span>
+        {campaign?.secretWord ? (
+          <SecretWordReveal
+            word={campaign.secretWord}
+            href={profileHref}
+            creatorName={creator.name ?? creator.username}
+            username={creator.username}
+          >
+            {details}
+          </SecretWordReveal>
+        ) : (
+          <>
+            {details}
+            <span className="creator-view-btn" aria-hidden="true">
+              View Profile
+            </span>
+          </>
+        )}
       </div>
     </article>
   );
